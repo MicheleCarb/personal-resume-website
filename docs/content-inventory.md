@@ -18,7 +18,7 @@ Sources:
 | GitHub | https://github.com/MicheleCarb | CV, repo remote |
 | Email | Not shown on the site; contact via LinkedIn (email stays inside the PDF) | Owner |
 | Phone | Excluded | Owner |
-| Location | Currently based in Nice, France · Open to relocation across Europe | Owner (CV says "in EU"; owner widened to Europe) |
+| Location | Currently based in Nice, France (relocation not mentioned for now) | Owner |
 | Headline | Software Engineer · DevOps | Owner |
 | Short introduction | Software engineer currently based in Nice, France, building and operating high-throughput backend systems in C++ and Java. I work across cloud infrastructure, CI/CD and observability, and bring hands-on Agile experience as a certified Scrum Master and Product Owner. | Draft A, owner-approved with edits |
 | Photo | None for now | Owner |
