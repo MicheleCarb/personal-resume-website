@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
 # Single verification entry point, used locally and in CI.
+# The checks and their order are defined in
+# docs/decisions/0005-verification-strategy.md.
 #
-# The application has not been initialized yet, so this only checks the
-# repository governance files. The stack checks listed in
-# docs/decisions/0005-verification-strategy.md are added with the foundation.
+# Prerequisites: Node 22 (see .nvmrc), `npm ci`, and
+# `npx playwright install chromium`.
 
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-echo "==> Checking shell script syntax"
+step() {
+  echo
+  echo "==> $1"
+}
+
+step "Checking shell script syntax"
 bash -n scripts/verify.sh
 
-echo "==> Checking required project files"
+step "Checking required project files"
 required_files=(
   AGENTS.md
   CLAUDE.md
@@ -21,6 +27,7 @@ required_files=(
   docs/architecture.md
   docs/decisions/README.md
   .claude/settings.json
+  package-lock.json
 )
 missing=0
 for file in "${required_files[@]}"; do
@@ -34,16 +41,36 @@ if [[ "$missing" -ne 0 ]]; then
   exit 1
 fi
 
-echo "==> Validating JSON configuration"
-if command -v python3 >/dev/null 2>&1; then
-  python3 -m json.tool .claude/settings.json >/dev/null
-else
-  echo "  skipped: python3 not available"
+step "Checking Node.js environment"
+node -e '
+  const [major, minor] = process.versions.node.split(".").map(Number);
+  if (major < 22 || (major === 22 && minor < 12)) {
+    console.error(`FAIL: Node ${process.version} found; 22.12 or newer is required (run: nvm use)`);
+    process.exit(1);
+  }
+'
+if [[ ! -d node_modules ]]; then
+  echo "FAIL: dependencies are not installed (run: npm ci)"
+  exit 1
 fi
 
-echo
-echo "NOTE: Application not initialized yet. Stack checks (format, lint,"
-echo "      type check, unit tests, build, accessibility tests) are added"
-echo "      with the foundation increment; see ADR 0005."
+step "Formatting (prettier)"
+npm run --silent format:check
+
+step "Linting (eslint)"
+npm run --silent lint
+
+step "Type checking (astro check)"
+npm run --silent check
+
+step "Unit tests (vitest)"
+npm run --silent test
+
+step "Production build (astro build)"
+npm run --silent build
+
+step "End-to-end and accessibility tests (playwright + axe)"
+npm run --silent test:e2e
+
 echo
 echo "OK: verification passed"

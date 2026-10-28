@@ -1,0 +1,14 @@
+dist/
+.astro/
+node_modules/
+playwright-report/
+test-results/
+package-lock.json
+
+# Vendored and tool-managed files
+.claude/skills/impeccable/
+.claude/agents/
+.impeccable/
+
+# Documentation is reviewed by hand, not reformatted
+*.md

@@ -4,9 +4,26 @@ Source for a small, static personal resume website, to be published on GitHub Pa
 
 ## Status
 
-Architecture is defined; implementation has not started. The site will be a static, bilingual (English/Italian) Astro site published at `https://michelecarb.one`.
+Foundation in place: a static, bilingual (English at `/`, Italian at `/it/`) Astro site, to be published at `https://michelecarb.one`. Page content is not implemented yet.
 
-Requirements: Node 22 LTS (see `.nvmrc` once the foundation is initialized).
+## Setup
+
+Requires Node 22 (pinned in `.nvmrc`).
+
+```bash
+nvm use
+npm ci
+npx playwright install chromium
+```
+
+## Development
+
+```bash
+npm run dev       # local dev server at http://localhost:4321
+npm run build     # production build into dist/
+npm run preview   # serve the production build
+npm run format    # apply Prettier formatting
+```
 
 ## Verification
 
@@ -14,7 +31,7 @@ Requirements: Node 22 LTS (see `.nvmrc` once the foundation is initialized).
 ./scripts/verify.sh
 ```
 
-CI runs the same script on every push and pull request. Stack checks (format, lint, type check, tests, build, accessibility) are added when the foundation is initialized; see [ADR 0005](docs/decisions/0005-verification-strategy.md).
+Runs formatting, lint, type checks, unit tests, the production build, and end-to-end accessibility tests against the build ([ADR 0005](docs/decisions/0005-verification-strategy.md)). CI runs the same script on every push and pull request.
 
 ## Documentation
 
