@@ -124,7 +124,7 @@ Restrained strategy: neutrals plus three status colours, and the status colours 
 ### Named Rules
 
 - **Colour lives on the line.** No coloured backgrounds, borders or panels anywhere else.
-- **Text colours are AA at 0.78 opacity.** Light-theme muted and status colours are dark enough to survive section-focus dimming; keep any new text colour above that bar.
+- **Text colours keep a margin above AA.** The light-theme muted and status colours were darkened for an earlier text-dimming effect; text no longer dims, but keep new text colours at least as dark.
 - **A status is a mark before it is a hue.** Filled check, ring, dashed ring, plus the text code; colour only reinforces.
 
 ## Typography
@@ -190,7 +190,8 @@ After the pipeline, two quiet sections in the same type system: a definition lis
 ### Motion
 
 - **Running spinner:** described under Station markers.
-- **Section focus** (CSS `view-timeline` per station, no JavaScript): the reading band runs from 35% below the top to 15% above the bottom of the viewport. A station crossing it is at full opacity and its marker scales to 1.2; outside it, station text eases to 0.78 opacity (the AA-safe floor) and markers to 0.35 at 0.85 scale. Ramps take the first and last 10% of the station's entry/exit range. The band's low bottom edge keeps the running station in focus on first load.
+- **Section focus** (CSS `view-timeline` per station, no JavaScript): a band from 40% to 60% of the viewport (`view-timeline-inset: 40% 40%`). A station is fully in focus from a quarter of the way into its entry (its heading is centred) until a quarter into its exit, and has fully handed over by 60% of its exit, so exactly one station is in focus at a time. In focus, the marker scales to 1.3 and a 0.2rem ring in the station's status colour fades and scales in around it (`.stage::after`). Nothing is ever dimmed; the pending station never takes focus.
+- Verify scroll-driven effects against a production build (`npm run build && npm run preview`): the dev server's hot reload does not reliably apply edits to these scoped styles.
 - **Chevron flow:** the chevrons travel upward with page scroll (`mask-position` on `scroll(root)`).
 - Opacity and transform only (plus the chevron mask position). Static under reduced motion and in browsers without scroll timelines.
 - Write animation longhands, never the `animation` shorthand next to `animation-timeline`: the CSS minifier folds them into a shorthand that browsers reject.

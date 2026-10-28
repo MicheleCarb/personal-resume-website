@@ -311,65 +311,79 @@ const openFirst = data.status === "running";
     }
   }
 
-  /* Section focus: the station crossing the reading band (35% below the
-     top to 15% above the bottom of the viewport; low enough that the running
-     station is in focus on first load) is at full strength and its
-     marker grows on the line; the others recede. Text never dims below 0.78,
-     which keeps every text colour at WCAG AA. Opacity and transform only,
-     CSS only, static under reduced motion or without scroll timelines. */
+  /* Focus ring: drawn around the marker when its station is in focus. */
+  .stage::after {
+    content: "";
+    position: absolute;
+    top: calc(0.15rem - 0.55rem);
+    left: calc(var(--track-x) - var(--pad) - var(--marker) / 2 - 0.55rem);
+    width: calc(var(--marker) + 1.1rem);
+    height: calc(var(--marker) + 1.1rem);
+    border: 0.2rem solid var(--tone);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Section focus: the station whose heading reaches the middle of the
+     viewport (a band from 40% to 60%) has its marker grown to 1.3 and ringed
+     in its status colour; the focus holds while the station crosses the
+     band. Nothing is ever dimmed. Opacity and transform only, CSS only,
+     static under reduced motion or without scroll timelines; the pending
+     station never takes focus. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      .stage {
+      .stage:not([data-status="pending"]) {
         view-timeline-name: --focus;
         view-timeline-axis: block;
-        view-timeline-inset: 35% 15%;
+        view-timeline-inset: 40% 40%;
       }
 
       /* Longhands only: minifiers fold a shorthand plus animation-timeline
          into one declaration that browsers reject. */
-      .stage-body,
-      .marker {
+      .stage:not([data-status="pending"]) .marker,
+      .stage:not([data-status="pending"])::after {
         animation-timing-function: linear;
         animation-fill-mode: both;
         animation-timeline: --focus;
       }
 
-      .stage-body {
-        animation-name: focus-text;
-      }
-
-      .marker {
+      .stage:not([data-status="pending"]) .marker {
         animation-name: focus-marker;
       }
+
+      .stage:not([data-status="pending"])::after {
+        animation-name: focus-ring;
+      }
     }
   }
 
-  @keyframes focus-text {
-    entry 0% {
-      opacity: 0.78;
-    }
-    entry 10%,
-    exit 90% {
-      opacity: 1;
-    }
-    exit 100% {
-      opacity: 0.78;
-    }
-  }
-
+  /* Full focus a quarter of the way into the band, so a station is in focus
+     as soon as its heading is centred; focus is gone once the station's end
+     is just below the centre, so it hands over cleanly to the next station. */
   @keyframes focus-marker {
+    entry 25%,
+    exit 25% {
+      transform: scale(1.3);
+    }
+    exit 60% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes focus-ring {
     entry 0% {
-      opacity: 0.35;
-      transform: scale(0.85);
+      opacity: 0;
+      transform: scale(0.6);
     }
-    entry 10%,
-    exit 90% {
+    entry 25%,
+    exit 25% {
       opacity: 1;
-      transform: scale(1.2);
+      transform: scale(1);
     }
-    exit 100% {
-      opacity: 0.35;
-      transform: scale(0.85);
+    exit 60% {
+      opacity: 0;
+      transform: scale(0.6);
     }
   }
 

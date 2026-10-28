@@ -46,7 +46,7 @@ The career is presented as a software-delivery pipeline: completed education and
 - Explicitly rejected: generic portfolio-card grids, purple gradients, glassmorphism, fake terminals, decorative dashboards, meaningless metrics or charts, excessive rounded containers, large or continuous animation.
 - Owner-approved exceptions:
   - The running station's marker spins like a build in progress.
-  - Section focus while scrolling: the station crossing the viewport's central reading band is at full opacity and its marker is highlighted on the line; the other stations are attenuated (text never below 0.78 opacity, so every text colour stays at WCAG AA). The line's chevrons also flow upward with scroll.
+  - Section focus while scrolling: the one station whose heading reaches the middle of the viewport has its marker grown to 1.3 and ringed in its status colour; focus hands over to the next station as you scroll. Nothing is ever dimmed, and the pending station never takes focus. The line's chevrons also flow upward with scroll.
   - All motion is opacity/transform only (plus the chevrons' mask position), CSS-only with no JavaScript, gated behind `@supports`, and fully static under `prefers-reduced-motion` or where scroll timelines are unsupported.
 - The shared handle `michelecarb` is shown verbatim in the masthead for LinkedIn, GitHub and the website, aligned so the three read as one identity.
 

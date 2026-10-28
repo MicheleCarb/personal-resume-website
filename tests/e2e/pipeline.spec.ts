@@ -143,51 +143,97 @@ test.describe("running marker motion", () => {
 test.describe("section focus", () => {
   const animations = (page: Page) =>
     page.evaluate(() => {
-      const body = document.querySelector(
-        '[data-status="running"] .stage-body',
-      )!;
-      const marker = document.querySelector('[data-status="running"] .marker')!;
-      const segment = document.querySelectorAll(".pipeline > li")[1];
+      const name = (selector: string, pseudo?: string) =>
+        getComputedStyle(document.querySelector(selector)!, pseudo)
+          .animationName;
       return {
-        body: getComputedStyle(body).animationName,
-        marker: getComputedStyle(marker).animationName,
-        line: getComputedStyle(segment, "::before").animationName,
+        text: name('[data-status="running"] .stage-body'),
+        running: name('[data-status="running"] .marker'),
+        success: name('[data-status="success"] .marker'),
+        ring: name('[data-status="success"]', "::after"),
+        pending: name('[data-status="pending"] .marker'),
+        line: name(".pipeline > li:nth-child(2)", "::before"),
       };
     });
 
-  test("focuses the station in the reading band and flows the chevrons", async ({
+  // Scale of each station's marker and opacity of its focus ring.
+  const focusState = (page: Page) =>
+    page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>(".stage")].map((stage) => {
+        const transform = getComputedStyle(
+          stage.querySelector(".marker")!,
+        ).transform;
+        return {
+          scale:
+            transform === "none"
+              ? 1
+              : Math.round(new DOMMatrix(transform).a * 100) / 100,
+          ring: Number(getComputedStyle(stage, "::after").opacity),
+          marker: Number(
+            getComputedStyle(stage.querySelector(".marker")!).opacity,
+          ),
+          text: Number(
+            getComputedStyle(stage.querySelector(".stage-body")!).opacity,
+          ),
+        };
+      }),
+    );
+
+  test("attaches the focus animations and flows the chevrons", async ({
     page,
   }) => {
     await page.goto("/");
     expect(await animations(page)).toEqual({
-      body: "focus-text",
-      marker: "focus-marker",
+      text: "none",
+      running: "focus-marker",
+      success: "focus-marker",
+      ring: "focus-ring",
+      pending: "none",
       line: "flow",
     });
   });
 
-  test("dims stations outside the band, but not below 0.78", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/");
-    const opacity = (status: string, nth = 0) =>
-      page
-        .locator(`[data-status="${status}"] .stage-body`)
-        .nth(nth)
-        .evaluate((el) => Number(getComputedStyle(el).opacity));
+  // Stations by index: 0 pending, 1 Amadeus, 2 Stellantis, 3 MSc, 4 Bachelor.
+  for (const [index, label] of [
+    [1, "Amadeus"],
+    [2, "Stellantis"],
+    [3, "the MSc"],
+  ] as const) {
+    test(`focuses only ${label} when its heading is centred`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/");
+      await page.evaluate((i) => {
+        const stage = document.querySelectorAll(".stage").item(i);
+        const heading = stage.querySelector("h3")!;
+        scrollTo(
+          0,
+          heading.getBoundingClientRect().top + scrollY - innerHeight / 2,
+        );
+      }, index);
 
-    // On load the running station sits in the band; older stations are below it.
-    expect(await opacity("running")).toBeGreaterThan(0.95);
-    expect(await opacity("success", 2)).toBeCloseTo(0.78, 2);
-  });
+      await expect
+        .poll(async () => (await focusState(page)).map((s) => s.scale))
+        .toEqual([0, 1, 2, 3, 4].map((i) => (i === index ? 1.3 : 1)));
+      const state = await focusState(page);
+      state.forEach((station, i) => {
+        expect(station.ring, `ring of station ${i}`).toBe(i === index ? 1 : 0);
+        expect(station.marker, `marker opacity of station ${i}`).toBe(1);
+        expect(station.text, `text opacity of station ${i}`).toBe(1);
+      });
+    });
+  }
 
   test("is fully static under reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     expect(await animations(page)).toEqual({
-      body: "none",
-      marker: "none",
+      text: "none",
+      running: "none",
+      success: "none",
+      ring: "none",
+      pending: "none",
       line: "none",
     });
   });
