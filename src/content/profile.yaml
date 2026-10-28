@@ -1,0 +1,25 @@
+# Owner-supplied profile. Sources: docs/content-inventory.md.
+# Italian text is a draft pending owner review.
+michele:
+  name: Michele Carbone
+  headline: Software Engineer · DevOps
+  location:
+    en: Currently based in Nice, France · Open to relocation across Europe
+    it: Attualmente a Nizza, Francia · Disponibile a trasferirmi in tutta Europa
+  intro:
+    en: >-
+      Software engineer currently based in Nice, France, building and operating
+      high-throughput backend systems in C++ and Java. I work across cloud
+      infrastructure, CI/CD and observability, and bring hands-on Agile
+      experience as a certified Scrum Master and Product Owner.
+    it: >-
+      Software engineer attualmente a Nizza, in Francia: sviluppo e gestisco
+      sistemi backend ad alto throughput in C++ e Java. Lavoro su infrastruttura
+      cloud, CI/CD e osservabilità, con esperienza Agile concreta come Scrum
+      Master e Product Owner certificato.
+  links:
+    linkedin: https://www.linkedin.com/in/michelecarb
+    github: https://github.com/MicheleCarb
+    # PLACEHOLDER: the PDF is added to public/cv/ in the content increment.
+    cv: /cv/michele-carbone-cv.pdf
+  repository: https://github.com/MicheleCarb/personal-resume-website

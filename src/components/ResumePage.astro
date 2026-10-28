@@ -1,0 +1,31 @@
+---
+import { getEntry } from "astro:content";
+import Base from "../layouts/Base.astro";
+import { ui, type Lang } from "../i18n/ui";
+import Footer from "./Footer.astro";
+import Header from "./Header.astro";
+import LanguageSwitch from "./LanguageSwitch.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const entry = await getEntry("profile", "michele");
+if (!entry) throw new Error("Profile entry 'michele' is missing");
+const profile = entry.data;
+const description = `${profile.headline}. ${profile.location[lang]}.`;
+---
+
+<Base lang={lang} title={profile.name} description={description}>
+  <LanguageSwitch lang={lang} />
+  <Header lang={lang} profile={profile} />
+  <main id="main" tabindex="-1">
+    <section aria-labelledby="intro-heading">
+      <h2 id="intro-heading">{t["intro.heading"]}</h2>
+      <p>{profile.intro[lang]}</p>
+    </section>
+  </main>
+  <Footer lang={lang} repository={profile.repository} />
+</Base>

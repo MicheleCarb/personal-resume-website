@@ -1,0 +1,24 @@
+---
+import { dateLocale, ui, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+  repository: string;
+}
+
+const { lang, repository } = Astro.props;
+const t = ui[lang];
+const builtAt = new Date();
+const builtLabel = new Intl.DateTimeFormat(dateLocale[lang], {
+  dateStyle: "long",
+}).format(builtAt);
+---
+
+<footer>
+  <p>
+    {t["footer.built"]}
+    <time datetime={builtAt.toISOString()}>{builtLabel}</time>
+    {" · "}
+    <a href={repository}>{t["footer.source"]}</a>
+  </p>
+</footer>

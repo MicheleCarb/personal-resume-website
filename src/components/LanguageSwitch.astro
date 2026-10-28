@@ -1,0 +1,25 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { languages, ui, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const others = (Object.keys(languages) as Lang[]).filter(
+  (code) => code !== lang,
+);
+---
+
+<nav aria-label={ui[lang].languageNav}>
+  <ul>
+    {others.map((code) => (
+      <li>
+        <a href={getRelativeLocaleUrl(code)} hreflang={code} lang={code}>
+          {languages[code]}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

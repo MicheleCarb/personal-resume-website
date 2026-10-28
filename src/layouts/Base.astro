@@ -1,10 +1,22 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { languages, ui, type Lang } from "../i18n/ui";
+
 interface Props {
-  lang: "en" | "it";
+  lang: Lang;
   title: string;
+  description: string;
 }
 
-const { lang, title } = Astro.props;
+const { lang, title, description } = Astro.props;
+const t = ui[lang];
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const alternates = (Object.keys(languages) as Lang[]).map((code) => ({
+  code,
+  href: new URL(getRelativeLocaleUrl(code), site).href,
+}));
+const otherLocales = alternates.filter((alt) => alt.code !== lang);
 ---
 
 <!doctype html>
@@ -13,8 +25,43 @@ const { lang, title } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => (
+      <link rel="alternate" hreflang={alt.code} href={alt.href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:locale" content={t["meta.locale"]} />
+    {otherLocales.map((alt) => (
+      <meta
+        property="og:locale:alternate"
+        content={ui[alt.code]["meta.locale"]}
+      />
+    ))}
+    <meta name="twitter:card" content="summary" />
+
+    <style>
+      /* Functional only: hidden until focused. Visual design comes later. */
+      .skip-link:not(:focus) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    </style>
   </head>
   <body>
+    <a class="skip-link" href="#main">
+      {t.skipLink}
+    </a>
     <slot />
   </body>
 </html>
