@@ -1,0 +1,24 @@
+# Source: CV-AI.pdf. Only years are known for this degree.
+# Italian text is a draft pending owner review.
+kind: education
+status: success
+organization:
+  en: Polytechnic of Turin
+  it: Politecnico di Torino
+location:
+  en: Turin, Italy
+  it: Torino, Italia
+steps:
+  - role:
+      en: MSc in Computer Engineering, Cybersecurity
+      it: Laurea Magistrale in Ingegneria Informatica, Cybersecurity
+    start: "2019"
+    end: "2022"
+    summary:
+      en: "Thesis: a cybersecurity-based approach to building blockchain systems compliant with data-protection regulations, applied to a Stellantis EV battery supply chain with embedded IoT sensors."
+      it: "Tesi: un approccio basato sulla cybersecurity per realizzare sistemi blockchain conformi alle normative sulla protezione dei dati, applicato alla supply chain delle batterie EV di Stellantis con sensori IoT integrati."
+    highlights:
+      en:
+        - "Relevant coursework: Data Analysis, Software Engineering, Operating Systems, Algorithms and Cybersecurity."
+      it:
+        - "Corsi rilevanti: Data Analysis, Ingegneria del Software, Sistemi Operativi, Algoritmi e Cybersecurity."

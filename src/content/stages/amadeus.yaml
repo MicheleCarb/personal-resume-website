@@ -1,0 +1,79 @@
+# Source: CV-AI.pdf (see docs/content-inventory.md). Internal application
+# names are generalized; throughput is stated as 150k TPS (owner decisions).
+# Italian text is a draft pending owner review.
+kind: work
+status: running
+organization: Amadeus IT Group
+employmentNote:
+  en: Consultant via Groupe SII
+  it: Consulente tramite Groupe SII
+location:
+  en: Nice, France
+  it: Nizza, Francia
+technologies:
+  - C++
+  - Java
+  - Azure
+  - OpenShift
+  - Jenkins
+  - Grafana
+  - Splunk
+  - Scrum
+steps:
+  - role:
+      en: Software Engineer · DevOps
+      it: Software Engineer · DevOps
+    start: 2023-02
+    end: 2024-05
+    summary:
+      en: Implemented backend changes in C++ and Java to support new functional behaviors and improve message handling logic.
+      it: Ho implementato modifiche backend in C++ e Java per supportare nuovi comportamenti funzionali e migliorare la logica di gestione dei messaggi.
+    highlights:
+      en:
+        - Supported early cloud adoption for the application, preparing backend components for scalable deployment.
+        - Developed automation and monitoring improvements to enhance reliability and operational visibility.
+      it:
+        - Ho supportato la prima adozione del cloud per l'applicazione, preparando i componenti backend a un deployment scalabile.
+        - Ho sviluppato miglioramenti di automazione e monitoraggio per aumentare affidabilità e visibilità operativa.
+  - role:
+      en: Software Engineer · DevOps · Scrum Master
+      it: Software Engineer · DevOps · Scrum Master
+    start: 2024-05
+    end: 2024-12
+    summary:
+      en: Worked on C++ backend components, contributing to feature enhancements, bug fixes, and service stability.
+      it: Ho lavorato su componenti backend in C++, contribuendo a nuove funzionalità, correzioni di bug e stabilità del servizio.
+    highlights:
+      en:
+        - Assisted the gradual transition of the application into cloud-ready architecture ahead of large-scale migration.
+        - Facilitated Scrum processes to improve team velocity and delivery transparency.
+        - Contributed to infrastructure-as-code, automated deployments, and production readiness for cloud components.
+      it:
+        - Ho supportato la transizione graduale dell'applicazione verso un'architettura cloud-ready in vista della migrazione su larga scala.
+        - Ho facilitato i processi Scrum per migliorare la velocità del team e la trasparenza delle consegne.
+        - Ho contribuito a infrastructure-as-code, deployment automatizzati e production readiness dei componenti cloud.
+  - role:
+      en: Software Engineer · DevOps · Team Contributor
+      it: Software Engineer · DevOps · Team Contributor
+    start: 2024-12
+    end: null
+    summary:
+      en: Owned features end-to-end, from technical design and implementation to production deployment and post-release fixes.
+      it: Responsabile di funzionalità end-to-end, dal design tecnico e dall'implementazione fino al deployment in produzione e alle correzioni post-rilascio.
+    highlights:
+      en:
+        - Designed and operationalized AI knowledge assistants, refining agent orchestration and retrieval strategies.
+        - Supported the cloud migration of high-throughput backend systems processing 150k TPS in production.
+        - Designed, deployed, and optimized cloud infrastructure for mission-critical systems (Azure, OpenShift).
+        - Implemented CI/CD pipelines, environment automation, and observability tooling (Jenkins, Grafana, Splunk).
+        - Decreased cloud cost by 200k€/year (20%) through cost-optimization initiatives (e.g., HPA rollouts).
+        - Supported the deployment and stability of our application across five European cloud landing zones.
+        - Led a team of 15 engineers as Scrum Master and Product Owner across two major applications.
+      it:
+        - Ho progettato e messo in esercizio assistenti AI per la knowledge base, affinando l'orchestrazione degli agenti e le strategie di retrieval.
+        - Ho supportato la migrazione al cloud di sistemi backend ad alto throughput che elaborano 150k TPS in produzione.
+        - Ho progettato, distribuito e ottimizzato infrastruttura cloud per sistemi mission-critical (Azure, OpenShift).
+        - Ho implementato pipeline CI/CD, automazione degli ambienti e strumenti di osservabilità (Jenkins, Grafana, Splunk).
+        - Ho ridotto i costi cloud di 200k€/anno (20%) con iniziative di ottimizzazione (ad es. rollout di HPA).
+        - Ho supportato il deployment e la stabilità della nostra applicazione in cinque landing zone cloud europee.
+        - Ho guidato un team di 15 ingegneri come Scrum Master e Product Owner su due applicazioni principali.

@@ -16,25 +16,25 @@ Stage {
   id: string
   kind: 'education' | 'work' | 'next'
   status: 'success' | 'running' | 'pending'
-  organization?: string
+  organization?: string | Localized   // e.g. Polytechnic of Turin / Politecnico di Torino
   employmentNote?: Localized
-  location?: string
+  location?: string | Localized
   parallelWith?: string            // id of an overlapping stage
-  steps: Step[]                    // one or more roles within the stage
+  steps: Step[]                    // roles within the stage; none for 'next'
   technologies?: string[]
   link?: URL
 }
 Step {
   role: Localized
-  start: 'YYYY-MM'
-  end: 'YYYY-MM' | null
-  summary: Localized
+  start: 'YYYY' | 'YYYY-MM'        // year only when the month is unknown
+  end: 'YYYY' | 'YYYY-MM' | null
+  summary?: Localized
   highlights?: Localized<string[]>
 }
 Localized = { en: string; it: string }
 ```
 
-Facts (organizations, dates, technologies, links) are stored once; only prose is localized.
+Facts (dates, technologies, links) are stored once; prose is localized, and names that differ by language (institutions, cities) may be localized. Dates keep the precision of the source: a year-only date is never padded with an invented month.
 
 Validation rules, enforced at build time and covered by tests:
 
@@ -42,8 +42,12 @@ Validation rules, enforced at build time and covered by tests:
 - at most one `pending` stage, with no organization and no dates;
 - only the running stage's last step may have an open end;
 - dates are well-formed and `start` ≤ `end`;
-- `parallelWith` references an existing stage;
-- every Italian field is present before release, and no `[PLACEHOLDER` text reaches the production build.
+- `parallelWith` references an existing stage whose dates overlap;
+- steps within a stage are ordered oldest first;
+- English and Italian highlight lists have the same length;
+- every Italian field is present (enforced by the schema), and no `[PLACEHOLDER` text reaches the production build.
+
+Single-stage rules run inside the Zod schema; collection-wide rules run in `getStages()` and fail the build. All rules live in `src/content/stage-rules.ts`, which is unit-tested directly.
 
 ## Consequences
 

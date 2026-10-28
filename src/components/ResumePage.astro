@@ -1,5 +1,6 @@
 ---
 import { getEntry } from "astro:content";
+import { getStages } from "../content/stages";
 import Base from "../layouts/Base.astro";
 import { ui, type Lang } from "../i18n/ui";
 import Footer from "./Footer.astro";
@@ -16,6 +17,8 @@ const entry = await getEntry("profile", "michele");
 if (!entry) throw new Error("Profile entry 'michele' is missing");
 const profile = entry.data;
 const description = `${profile.headline}. ${profile.location[lang]}.`;
+// Validates the career data at build time; rendered by the pipeline increment.
+await getStages();
 ---
 
 <Base lang={lang} title={profile.name} description={description}>

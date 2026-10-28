@@ -1,0 +1,16 @@
+# Source: CV-AI.pdf. Only years are known for this degree.
+# Italian text is a draft pending owner review.
+kind: education
+status: success
+organization:
+  en: Polytechnic of Turin
+  it: Politecnico di Torino
+location:
+  en: Turin, Italy
+  it: Torino, Italia
+steps:
+  - role:
+      en: Bachelor in Computer Engineering
+      it: Laurea Triennale in Ingegneria Informatica
+    start: "2016"
+    end: "2019"

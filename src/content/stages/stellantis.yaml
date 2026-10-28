@@ -1,0 +1,25 @@
+# Source: CV-AI.pdf. Overlaps with the MSc, so it is drawn as a parallel stage.
+# Italian text is a draft pending owner review.
+kind: work
+status: success
+organization: Stellantis
+location:
+  en: Turin, Italy
+  it: Torino, Italia
+parallelWith: msc
+steps:
+  - role:
+      en: Master Thesis Researcher, then Engineering Specialist
+      it: Tesista, poi Engineering Specialist
+    start: 2021-10
+    end: 2022-09
+    summary:
+      en: Worked in Connectivity Engineering on connected-vehicle features, maintained specs and coordinated with external teams.
+      it: Ho lavorato in Connectivity Engineering su funzionalità per veicoli connessi, curando le specifiche e coordinandomi con team esterni.
+    highlights:
+      en:
+        - Conducted thesis research as part of the EU "Concordia Horizon 2020" cybersecurity program.
+        - Designed a GDPR-compliant blockchain approach for EV battery supply-chain tracking integrating IoT sensor data.
+      it:
+        - Ho svolto la ricerca di tesi nell'ambito del programma europeo di cybersecurity "Concordia Horizon 2020".
+        - Ho progettato un approccio blockchain conforme al GDPR per il tracciamento della supply chain delle batterie EV, integrando dati da sensori IoT.

@@ -1,9 +1,7 @@
 import { defineCollection } from "astro:content";
-import { file } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
-
-// Prose shown on the page exists in every language (ADR 0004).
-const localized = z.object({ en: z.string().min(1), it: z.string().min(1) });
+import { localized, stageSchema } from "./content/stage-rules";
 
 const profile = defineCollection({
   loader: file("src/content/profile.yaml"),
@@ -21,4 +19,10 @@ const profile = defineCollection({
   }),
 });
 
-export const collections = { profile };
+// One file per career stage; collection-wide rules live in stage-rules.ts.
+const stages = defineCollection({
+  loader: glob({ pattern: "*.yaml", base: "src/content/stages" }),
+  schema: stageSchema,
+});
+
+export const collections = { profile, stages };
