@@ -17,6 +17,7 @@ required_files=(
   AGENTS.md
   CLAUDE.md
   README.md
+  PRODUCT.md
   docs/architecture.md
   docs/decisions/README.md
   .claude/settings.json

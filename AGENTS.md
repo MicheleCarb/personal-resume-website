@@ -34,6 +34,7 @@ Work in small, independently verifiable increments:
 | Architecture and stack | `docs/architecture.md` |
 | Architecture decision records | `docs/decisions/` |
 | Verification entry point | `scripts/verify.sh` (CI runs the same script) |
-| Product and design context | Added later by the design workflow setup |
+| Product context (users, purpose, constraints) | `PRODUCT.md` |
+| Design system | `DESIGN.md`, created by the Impeccable design workflow once a visual direction is built |
 
 Record significant technical decisions as ADRs in `docs/decisions/` instead of scattering rationale across other files.

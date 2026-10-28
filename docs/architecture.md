@@ -2,7 +2,7 @@
 
 ## Status
 
-No technology stack has been selected. This document will describe the chosen stack, project structure, and build/deployment pipeline once the decision is made and recorded in [decisions/](decisions/).
+No technology stack has been confirmed. The proposed stack is Astro with static output (rationale in [PRODUCT.md](../PRODUCT.md#stack)); it becomes binding only once recorded as an ADR in [decisions/](decisions/). This document will then describe the stack, project structure, and build/deployment pipeline.
 
 ## Fixed constraints
 

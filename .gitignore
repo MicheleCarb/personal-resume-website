@@ -1,6 +1,10 @@
 # Local Claude Code settings (personal, not shared)
 .claude/settings.local.json
 
+# Impeccable engine binary (21 MB, platform-specific; the launcher
+# downloads a checksum-verified copy on first run)
+.claude/skills/impeccable/scripts/bin/
+
 # Environment files
 .env
 .env.*

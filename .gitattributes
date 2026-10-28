@@ -1,0 +1,3 @@
+# Vendored Impeccable skill: keep upstream files byte-for-byte
+# (the Windows launcher needs CRLF), so skip whitespace checks there.
+.claude/skills/impeccable/** -whitespace
