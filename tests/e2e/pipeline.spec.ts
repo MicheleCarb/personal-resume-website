@@ -57,9 +57,19 @@ test.describe("career pipeline (English)", () => {
     ).toHaveText("MSc in Computer Engineering, Cybersecurity");
   });
 
+  test("opens the current role's details by default", async ({ page }) => {
+    const current = pipeline(page).locator('[aria-current="step"]');
+    await expect(current.locator("details").first()).toHaveAttribute(
+      "open",
+      "",
+    );
+    await expect(current.getByText(/AI knowledge assistants/)).toBeVisible();
+    await expect(pipeline(page).locator("details[open]")).toHaveCount(1);
+  });
+
   test("opens step details from the keyboard", async ({ page }) => {
-    const details = pipeline(page).locator("details").first();
-    const highlight = details.getByText(/AI knowledge assistants/);
+    const details = pipeline(page).locator("details").nth(1);
+    const highlight = details.getByText(/Facilitated Scrum processes/);
     await expect(highlight).toBeHidden();
 
     await details.locator("summary").focus();
@@ -101,10 +111,10 @@ test.describe("without JavaScript", () => {
     await expect(pipeline(page).getByRole("heading", { level: 3 })).toHaveCount(
       5,
     );
-    const summary = pipeline(page).locator("summary").first();
+    const summary = pipeline(page).locator("summary").nth(1);
     await summary.click();
     await expect(
-      pipeline(page).getByText(/AI knowledge assistants/),
+      pipeline(page).getByText(/Facilitated Scrum processes/),
     ).toBeVisible();
   });
 });
@@ -127,5 +137,58 @@ test.describe("running marker motion", () => {
     await expect(page.locator('[aria-current="step"]')).toContainText(
       "RUNNING",
     );
+  });
+});
+
+test.describe("section focus", () => {
+  const animations = (page: Page) =>
+    page.evaluate(() => {
+      const body = document.querySelector(
+        '[data-status="running"] .stage-body',
+      )!;
+      const marker = document.querySelector('[data-status="running"] .marker')!;
+      const segment = document.querySelectorAll(".pipeline > li")[1];
+      return {
+        body: getComputedStyle(body).animationName,
+        marker: getComputedStyle(marker).animationName,
+        line: getComputedStyle(segment, "::before").animationName,
+      };
+    });
+
+  test("focuses the station in the reading band and flows the chevrons", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    expect(await animations(page)).toEqual({
+      body: "focus-text",
+      marker: "focus-marker",
+      line: "flow",
+    });
+  });
+
+  test("dims stations outside the band, but not below 0.78", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    const opacity = (status: string, nth = 0) =>
+      page
+        .locator(`[data-status="${status}"] .stage-body`)
+        .nth(nth)
+        .evaluate((el) => Number(getComputedStyle(el).opacity));
+
+    // On load the running station sits in the band; older stations are below it.
+    expect(await opacity("running")).toBeGreaterThan(0.95);
+    expect(await opacity("success", 2)).toBeCloseTo(0.78, 2);
+  });
+
+  test("is fully static under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    expect(await animations(page)).toEqual({
+      body: "none",
+      marker: "none",
+      line: "none",
+    });
   });
 });

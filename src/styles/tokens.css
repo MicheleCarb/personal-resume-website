@@ -7,14 +7,15 @@
 
   --ground: #ffffff;
   --ink: #14213d;
-  --ink-muted: #4a5568;
+  --ink-muted: #3a4353;
   --rule: #d8dde5;
   --line: #14213d;
   --on-line: #ffffff;
 
-  --success: #17733f;
-  --running: #1d56c4;
-  --pending: #6b7480;
+  /* Dark enough to stay AA at the 0.78 focus-dimming floor. */
+  --success: #0e5631;
+  --running: #16439c;
+  --pending: #3a4353;
   --pending-line: #8d96a2;
 
   --selection: #d6e3fb;

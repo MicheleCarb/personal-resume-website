@@ -21,13 +21,18 @@ A static, bilingual, single-page resume site built with Astro and deployed to Gi
 
 ## Project structure
 
-Target layout once the foundation is initialized:
+Current layout:
 
 ```text
 astro.config.mjs, package.json, tsconfig.json, .nvmrc
 eslint.config.js, .prettierrc.json, vitest.config.ts, playwright.config.ts
 public/
-  cv/michele-carbone-cv.pdf
+  favicon.png, apple-touch-icon.png, og-image.png   # generated: npm run images
+  robots.txt
+  cv/michele-carbone-cv.pdf                          # TODO(cv): not yet supplied
+scripts/
+  verify.sh                # single verification entry point
+  generate-images.mjs      # renders icons and link preview with Playwright
 src/
   content.config.ts        # collection schemas
   content/stages/*.yaml    # one file per career stage

@@ -3,10 +3,11 @@ import { getEntry } from "astro:content";
 import { getStages } from "../content/stages";
 import Base from "../layouts/Base.astro";
 import { ui, type Lang } from "../i18n/ui";
-import Footer from "./Footer.astro";
 import Header from "./Header.astro";
 import LanguageSwitch from "./LanguageSwitch.astro";
 import Pipeline from "./Pipeline.astro";
+import Skills from "./Skills.astro";
+import Credentials from "./Credentials.astro";
 
 interface Props {
   lang: Lang;
@@ -21,7 +22,13 @@ const description = `${profile.headline}. ${profile.location[lang]}.`;
 const stages = await getStages();
 ---
 
-<Base lang={lang} title={profile.name} description={description}>
+<Base
+  lang={lang}
+  title={`${profile.name} · ${profile.headline}`}
+  siteName={profile.name}
+  description={description}
+  imageAlt={`${profile.name}, ${profile.headline}: linkedin.com/in/${profile.handle}, github.com/${profile.handle}, ${profile.handle}.one`}
+>
   <LanguageSwitch lang={lang} />
   <Header lang={lang} profile={profile} />
   <main id="main" tabindex="-1">
@@ -32,8 +39,13 @@ const stages = await getStages();
       <p>{profile.intro[lang]}</p>
     </section>
     <Pipeline stages={stages} lang={lang} />
+    <Skills lang={lang} skills={profile.skills} />
+    <Credentials
+      lang={lang}
+      certifications={profile.certifications}
+      languages={profile.languages}
+    />
   </main>
-  <Footer lang={lang} repository={profile.repository} />
 </Base>
 
 <style>

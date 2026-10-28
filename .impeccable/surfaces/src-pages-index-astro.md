@@ -26,7 +26,7 @@ Success is a confident 30-second scan. Proof is the owner's real career only (se
 
 ## Scope and boundaries
 
-Single page per language: header (name, headline, location, links), intro, career pipeline, skills, certifications and languages, footer with build date. No projects, photo, email, or phone. Anti-goals are listed under Brand Commitments in PRODUCT.md.
+Single page per language: header (name, headline, location, links), intro, career pipeline, skills, certifications and languages; no footer (owner). Section focus while scrolling (station in the central band at full strength, its marker highlighted, others attenuated) and chevron flow (owner request), static under reduced motion. No projects, photo, email, or phone. Anti-goals are listed under Brand Commitments in PRODUCT.md.
 
 ## States and ranges
 

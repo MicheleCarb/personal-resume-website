@@ -30,6 +30,8 @@ const details = [data.employmentNote, data.location]
   .filter((value) => value !== undefined)
   .map((value) => localize(value, lang));
 const steps = [...data.steps].reverse();
+// The current role's highlights are the strongest content: open by default.
+const openFirst = data.status === "running";
 ---
 
 <div class="stage" data-status={data.status}>
@@ -50,7 +52,7 @@ const steps = [...data.steps].reverse();
 
     {steps.length > 0 && (
       <ul class="steps">
-        {steps.map((step) => {
+        {steps.map((step, index) => {
           const role = step.role[lang];
           const duration = formatDuration(step.start, step.end, lang, now);
           return (
@@ -77,7 +79,7 @@ const steps = [...data.steps].reverse();
               </p>
               {step.summary && <p class="step-summary">{step.summary[lang]}</p>}
               {step.highlights && (
-                <details>
+                <details open={openFirst && index === 0}>
                   <summary>
                     {t["step.details"]}
                     <span class="visually-hidden">: {role}</span>
@@ -306,6 +308,68 @@ const steps = [...data.steps].reverse();
 
     .duration > span {
       display: none;
+    }
+  }
+
+  /* Section focus: the station crossing the reading band (35% below the
+     top to 15% above the bottom of the viewport; low enough that the running
+     station is in focus on first load) is at full strength and its
+     marker grows on the line; the others recede. Text never dims below 0.78,
+     which keeps every text colour at WCAG AA. Opacity and transform only,
+     CSS only, static under reduced motion or without scroll timelines. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .stage {
+        view-timeline-name: --focus;
+        view-timeline-axis: block;
+        view-timeline-inset: 35% 15%;
+      }
+
+      /* Longhands only: minifiers fold a shorthand plus animation-timeline
+         into one declaration that browsers reject. */
+      .stage-body,
+      .marker {
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --focus;
+      }
+
+      .stage-body {
+        animation-name: focus-text;
+      }
+
+      .marker {
+        animation-name: focus-marker;
+      }
+    }
+  }
+
+  @keyframes focus-text {
+    entry 0% {
+      opacity: 0.78;
+    }
+    entry 10%,
+    exit 90% {
+      opacity: 1;
+    }
+    exit 100% {
+      opacity: 0.78;
+    }
+  }
+
+  @keyframes focus-marker {
+    entry 0% {
+      opacity: 0.35;
+      transform: scale(0.85);
+    }
+    entry 10%,
+    exit 90% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    exit 100% {
+      opacity: 0.35;
+      transform: scale(0.85);
     }
   }
 

@@ -164,4 +164,24 @@ for (const stage of stages) {
       pointer-events: none;
     }
   }
+
+  /* The chevrons travel upward while the page scrolls, so the line visibly
+     flows towards today. Static under reduced motion or without scroll
+     timelines. Longhands only (see PipelineStage.astro). */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .pipeline > li:not(:first-child)::before {
+        animation-name: flow;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root);
+      }
+    }
+  }
+
+  @keyframes flow {
+    to {
+      mask-position: center -48rem;
+    }
+  }
 </style>

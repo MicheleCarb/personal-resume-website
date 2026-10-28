@@ -17,4 +17,11 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,
+  {
+    // Node scripts; `document` is used inside Playwright's page.evaluate.
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: { URL: "readonly", console: "readonly", document: "readonly" },
+    },
+  },
 ];

@@ -98,7 +98,9 @@ Sources:
 - DevOps: high-throughput distributed systems (150k TPS), CI/CD, Infrastructure as Code, Git, ArgoCD, Kafka
 - Tools: Linux (daily CLI, Ubuntu), Jenkins, Grafana, Splunk
 - Agile: Scrum, SAFe, Product Ownership, Scrum Master
-- AI: Cursor, GitHub Copilot, supporting AI-augmented development workflows
+- ~~AI: Cursor, GitHub Copilot, supporting AI-augmented development workflows~~ replaced by (owner, 2026-10-28):
+  - Agent orchestration: multi-agent workflows, AI knowledge assistants, context engineering
+  - Agentic development: Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP
 - Also mentioned in tracker lines: Ansible
 
 ## Certifications (CV)

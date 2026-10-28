@@ -1,7 +1,7 @@
 import { defineCollection } from "astro:content";
 import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
-import { localized, stageSchema } from "./content/stage-rules";
+import { localizable, localized, stageSchema } from "./content/stage-rules";
 
 const profile = defineCollection({
   loader: file("src/content/profile.yaml"),
@@ -15,9 +15,14 @@ const profile = defineCollection({
       linkedin: z.url(),
       github: z.url(),
       website: z.url(),
-      cv: z.string().startsWith("/"),
+      cv: z.string().startsWith("/").optional(),
     }),
     repository: z.url(),
+    skills: z.array(
+      z.object({ group: localized, items: z.array(localizable).min(1) }),
+    ),
+    certifications: z.array(z.string().min(1)),
+    languages: z.array(z.object({ name: localized, level: localized })),
   }),
 });
 

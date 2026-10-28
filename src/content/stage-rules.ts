@@ -6,7 +6,7 @@ const text = z.string().min(1);
 export const localized = z.object({ en: text, it: text });
 const localizedList = z.object({ en: z.array(text), it: z.array(text) });
 // A fact that reads the same in both languages, or differs per language.
-const localizable = z.union([text, localized]);
+export const localizable = z.union([text, localized]);
 
 // "YYYY" when only the year is known, otherwise "YYYY-MM".
 const partialDate = z

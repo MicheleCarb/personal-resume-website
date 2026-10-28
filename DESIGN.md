@@ -4,13 +4,13 @@ description: A resume drawn as one transit line, read like a station diagram.
 colors:
   ground: "#ffffff"
   ink: "#14213d"
-  ink-muted: "#4a5568"
+  ink-muted: "#3a4353"
   rule: "#d8dde5"
   line: "#14213d"
   on-line: "#ffffff"
-  success: "#17733f"
-  running: "#1d56c4"
-  pending: "#6b7480"
+  success: "#0e5631"
+  running: "#16439c"
+  pending: "#3a4353"
   pending-line: "#8d96a2"
   selection: "#d6e3fb"
   dark-ground: "#0d1424"
@@ -110,20 +110,21 @@ Restrained strategy: neutrals plus three status colours, and the status colours 
 ### Primary
 
 - **Ink** (`#14213d` / dark `#e6ebf3`): all text, the line, the masthead rule.
-- **Running blue** (`#1d56c4` / dark `#7eaaff`): the running marker, its status code, interactive text (Details summaries, hover, focus ring, caret).
+- **Running blue** (`#16439c` / dark `#7eaaff`): the running marker, its status code, interactive text (Details summaries, hover, focus ring, caret).
 
 ### Status
 
-- **Success green** (`#17733f` / dark `#4cc48a`): completed markers and status codes.
-- **Pending grey** (`#6b7480` text, `#8d96a2` dashed line / dark `#9aa3b2`, `#6f7a8c`).
+- **Success green** (`#0e5631` / dark `#4cc48a`): completed markers and status codes.
+- **Pending grey** (`#3a4353` text, `#8d96a2` dashed line / dark `#9aa3b2`, `#6f7a8c`).
 
 ### Neutral
 
-- **Ground** (`#ffffff` / dark `#0d1424`), **ink-muted** (`#4a5568` / dark `#a7b1c2`) for dates and secondary lines, **rule** (`#d8dde5` / dark `#28324a`) for hairlines between role steps and above the footer.
+- **Ground** (`#ffffff` / dark `#0d1424`), **ink-muted** (`#3a4353` / dark `#a7b1c2`) for dates and secondary lines, **rule** (`#d8dde5` / dark `#28324a`) for hairlines between role steps.
 
 ### Named Rules
 
 - **Colour lives on the line.** No coloured backgrounds, borders or panels anywhere else.
+- **Text colours are AA at 0.78 opacity.** Light-theme muted and status colours are dark enough to survive section-focus dimming; keep any new text colour above that bar.
 - **A status is a mark before it is a hue.** Filled check, ring, dashed ring, plus the text code; colour only reinforces.
 
 ## Typography
@@ -182,10 +183,31 @@ Native `<details>`. Summary in running blue, 700, min 2.75rem tall, with a CSS-d
 
 Ink text, 0.1em underline at 0.22em offset, running blue on hover, 3px running-blue focus ring with 3px offset. Masthead links get 0.5rem vertical padding for touch.
 
+### Skills and credentials
+
+After the pipeline, two quiet sections in the same type system: a definition list of skill groups (group in 700 ink, items comma-separated in ink-muted) in an auto-fill grid of 18rem minimum columns, then certifications and spoken languages as two plain lists side by side. No bars, percentages, ratings or badges.
+
+### Motion
+
+- **Running spinner:** described under Station markers.
+- **Section focus** (CSS `view-timeline` per station, no JavaScript): the reading band runs from 35% below the top to 15% above the bottom of the viewport. A station crossing it is at full opacity and its marker scales to 1.2; outside it, station text eases to 0.78 opacity (the AA-safe floor) and markers to 0.35 at 0.85 scale. Ramps take the first and last 10% of the station's entry/exit range. The band's low bottom edge keeps the running station in focus on first load.
+- **Chevron flow:** the chevrons travel upward with page scroll (`mask-position` on `scroll(root)`).
+- Opacity and transform only (plus the chevron mask position). Static under reduced motion and in browsers without scroll timelines.
+- Write animation longhands, never the `animation` shorthand next to `animation-timeline`: the CSS minifier folds them into a shorthand that browsers reject.
+
+### Details default
+
+The current role's first step opens by default; every other step starts collapsed.
+
+### Raster assets
+
+`public/favicon.png` (64px), `public/apple-touch-icon.png` (180px) and `public/og-image.png` (1200×630) are rendered by `scripts/generate-images.mjs` from HTML using the site's font and light-theme tokens: a lowercase white "mc" monogram on ink, and a link preview showing a segment of the line beside the name, headline and the aligned `michelecarb` addresses.
+
 ## Do's and Don'ts
 
 - **Do** keep every new piece of colour on the line or a status code.
 - **Do** add stages by editing content files; the line, order and loop are derived.
 - **Don't** wrap stages in cards, add badges or pills, or put a label above a heading.
 - **Don't** introduce a second typeface or monospace for "technical" flavour.
-- **Don't** animate anything but the running marker's spinner, and never without a reduced-motion fallback.
+- **Don't** add motion beyond the running spinner and the pipeline's scroll-driven effects, and never without a reduced-motion fallback.
+- **Do** regenerate raster assets with `npm run images` rather than editing them.

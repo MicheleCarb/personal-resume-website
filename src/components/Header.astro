@@ -55,9 +55,13 @@ const identities = [
       ))}
     </ul>
     <p class="cv">
-      <a href={links.cv} type="application/pdf" download>
-        {t["links.cv"]}
-      </a>
+      {links.cv ? (
+        <a href={links.cv} type="application/pdf" download>
+          {t["links.cv"]}
+        </a>
+      ) : (
+        <span class="soon">{t["links.cvSoon"]}</span>
+      )}
     </p>
   </nav>
 </header>
@@ -139,9 +143,14 @@ const identities = [
     font-weight: 700;
   }
 
-  .cv a {
+  .cv a,
+  .soon {
     display: inline-block;
     padding-block: var(--space-2);
+  }
+
+  .soon {
+    color: var(--ink-muted);
   }
 
   @media (min-width: 48rem) {

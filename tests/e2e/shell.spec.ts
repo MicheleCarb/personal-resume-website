@@ -11,7 +11,7 @@ const pages = [
       linkedin: "LinkedIn: linkedin.com/in/michelecarb",
       github: "GitHub: github.com/michelecarb",
       website: "Website: michelecarb.one",
-      cv: "Download CV (PDF)",
+      cvSoon: "CV (PDF): coming soon",
     },
   },
   {
@@ -22,7 +22,7 @@ const pages = [
       linkedin: "LinkedIn: linkedin.com/in/michelecarb",
       github: "GitHub: github.com/michelecarb",
       website: "Sito web: michelecarb.one",
-      cv: "Scarica il CV (PDF)",
+      cvSoon: "CV (PDF): in arrivo",
     },
   },
 ];
@@ -33,7 +33,7 @@ for (const { path, other, links } of pages) {
       await page.goto(path);
     });
 
-    test("links to profiles, website, and CV with descriptive names", async ({
+    test("links to profiles and website, with the CV marked coming soon", async ({
       page,
     }) => {
       await expect(
@@ -45,10 +45,9 @@ for (const { path, other, links } of pages) {
       await expect(
         page.getByRole("link", { name: links.website }),
       ).toHaveAttribute("href", "https://michelecarb.one");
-      await expect(page.getByRole("link", { name: links.cv })).toHaveAttribute(
-        "href",
-        "/cv/michele-carbone-cv.pdf",
-      );
+      // TODO(cv): once the PDF exists, expect a download link instead.
+      await expect(page.getByText(links.cvSoon)).toBeVisible();
+      await expect(page.getByRole("link", { name: /CV/ })).toHaveCount(0);
     });
 
     test("switches to the other language", async ({ page }) => {
@@ -91,13 +90,97 @@ for (const { path, other, links } of pages) {
         "content",
         /\S/,
       );
+      await expect(page).toHaveTitle(
+        "Michele Carbone · Software Engineer · DevOps",
+      );
+      await expect(head.locator('meta[property="og:image"]')).toHaveAttribute(
+        "content",
+        `${site}/og-image.png`,
+      );
+      await expect(head.locator('meta[name="twitter:card"]')).toHaveAttribute(
+        "content",
+        "summary_large_image",
+      );
     });
   });
 }
 
-// The PDF is supplied in the content increment; remove fixme then.
+// TODO(cv): remove fixme once the PDF is added.
 test.fixme("CV PDF is served", async ({ request }) => {
   const response = await request.get("/cv/michele-carbone-cv.pdf");
   expect(response.ok()).toBe(true);
   expect(response.headers()["content-type"]).toContain("application/pdf");
 });
+
+const sections = [
+  {
+    path: "/",
+    skills: "Skills",
+    groups: ["Programming", "Agent orchestration", "Agentic development"],
+    agentic: /Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP/,
+    credentials: "Certifications & Languages",
+    language: /Italian\s*·\s*Native/,
+  },
+  {
+    path: "/it/",
+    skills: "Competenze",
+    groups: ["Programmazione", "Orchestrazione di agenti", "Sviluppo agentico"],
+    agentic: /Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP/,
+    credentials: "Certificazioni e lingue",
+    language: /Italiano\s*·\s*Madrelingua/,
+  },
+];
+
+for (const {
+  path,
+  skills,
+  groups,
+  agentic,
+  credentials,
+  language,
+} of sections) {
+  test(`${path} lists skills, certifications, and languages`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+
+    const skillsSection = page.getByRole("region", { name: skills });
+    for (const group of groups) {
+      await expect(
+        skillsSection.getByText(group, { exact: true }),
+      ).toBeVisible();
+    }
+    await expect(skillsSection.getByText(agentic)).toBeVisible();
+
+    const credentialsSection = page.getByRole("region", { name: credentials });
+    await expect(
+      credentialsSection.getByText("SAFe 6.0 Certified Scrum Master"),
+    ).toBeVisible();
+    await expect(credentialsSection.getByText(language)).toBeVisible();
+  });
+}
+
+test("serves the icons, preview image, and robots.txt", async ({ request }) => {
+  for (const path of [
+    "/favicon.png",
+    "/apple-touch-icon.png",
+    "/og-image.png",
+    "/robots.txt",
+  ]) {
+    const response = await request.get(path);
+    expect(response.ok(), path).toBe(true);
+  }
+});
+
+for (const path of ["/", "/it/"]) {
+  test(`${path} loads without console errors`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on("console", (message) => {
+      if (message.type() === "error") errors.push(message.text());
+    });
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto(path);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    expect(errors).toEqual([]);
+  });
+}

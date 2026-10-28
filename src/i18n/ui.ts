@@ -13,9 +13,8 @@ const en = {
   "links.github": "GitHub",
   "links.website": "Website",
   "links.cv": "Download CV (PDF)",
+  "links.cvSoon": "CV (PDF): coming soon",
   "intro.heading": "About",
-  "footer.built": "Built on",
-  "footer.source": "Source on GitHub",
   "pipeline.heading": "Career pipeline",
   "pipeline.parallel": "Parallel stages",
   "pipeline.next": "Pipeline continues",
@@ -25,6 +24,10 @@ const en = {
   "step.present": "Present",
   "step.details": "Details",
   "stage.technologies": "Technologies",
+  "skills.heading": "Skills",
+  "credentials.heading": "Certifications & Languages",
+  "credentials.certifications": "Certifications",
+  "credentials.languages": "Languages",
 };
 
 type UIStrings = Record<keyof typeof en, string>;
@@ -39,9 +42,8 @@ const it: UIStrings = {
   "links.github": "GitHub",
   "links.website": "Sito web",
   "links.cv": "Scarica il CV (PDF)",
+  "links.cvSoon": "CV (PDF): in arrivo",
   "intro.heading": "Profilo",
-  "footer.built": "Generato il",
-  "footer.source": "Codice sorgente su GitHub",
   "pipeline.heading": "Pipeline di carriera",
   "pipeline.parallel": "Fasi in parallelo",
   "pipeline.next": "La pipeline continua",
@@ -51,6 +53,10 @@ const it: UIStrings = {
   "step.present": "Oggi",
   "step.details": "Dettagli",
   "stage.technologies": "Tecnologie",
+  "skills.heading": "Competenze",
+  "credentials.heading": "Certificazioni e lingue",
+  "credentials.certifications": "Certificazioni",
+  "credentials.languages": "Lingue",
 };
 
 export const ui: Record<Lang, UIStrings> = { en, it };

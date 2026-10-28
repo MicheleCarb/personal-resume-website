@@ -23,6 +23,83 @@ michele:
     linkedin: https://www.linkedin.com/in/michelecarb
     github: https://github.com/MicheleCarb
     website: https://michelecarb.one
-    # PLACEHOLDER: the PDF is added to public/cv/ in the content increment.
-    cv: /cv/michele-carbone-cv.pdf
+    # TODO(cv): add the PDF as public/cv/michele-carbone-cv.pdf, then set
+    #   cv: /cv/michele-carbone-cv.pdf
+    # Until then the masthead shows "CV (PDF): coming soon".
   repository: https://github.com/MicheleCarb/personal-resume-website
+  # Sources: CV-AI.pdf skills section; the two agentic groups replace the CV's
+  # "AI" line (owner, 2026-10-28). Italian text is a draft pending owner review.
+  skills:
+    - group:
+        en: Programming
+        it: Programmazione
+      items:
+        - en: C, C++, Java (production)
+          it: C, C++, Java (in produzione)
+        - en: Python, Bash (automation and tooling)
+          it: Python, Bash (automazione e tooling)
+    - group:
+        en: Cloud & Platforms
+        it: Cloud e piattaforme
+      items: [Azure, OpenShift, Kubernetes]
+    - group:
+        en: DevOps
+        it: DevOps
+      items:
+        - en: High-throughput distributed systems (150k TPS)
+          it: Sistemi distribuiti ad alto throughput (150k TPS)
+        - CI/CD
+        - en: Infrastructure as Code
+          it: Infrastructure as Code
+        - Git
+        - ArgoCD
+        - Kafka
+    - group:
+        en: Tools
+        it: Strumenti
+      items:
+        - en: "Linux (daily use: CLI, Ubuntu)"
+          it: "Linux (uso quotidiano: CLI, Ubuntu)"
+        - Jenkins
+        - Grafana
+        - Splunk
+    - group:
+        en: Agile
+        it: Agile
+      items: [Scrum, SAFe, Product Ownership, Scrum Master]
+    - group:
+        en: Agent orchestration
+        it: Orchestrazione di agenti
+      items:
+        - en: Multi-agent workflows
+          it: Workflow multi-agente
+        - en: AI knowledge assistants
+          it: assistenti AI per la knowledge base
+        - en: context engineering
+          it: context engineering
+    - group:
+        en: Agentic development
+        it: Sviluppo agentico
+      items: [Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP]
+  certifications:
+    - SAFe 6.0 Certified AI-Empowered Product Owner/Product Manager
+    - SAFe 6.0 Certified Scrum Master
+  languages:
+    - name:
+        en: Italian
+        it: Italiano
+      level:
+        en: Native
+        it: Madrelingua
+    - name:
+        en: English
+        it: Inglese
+      level:
+        en: Fluent
+        it: Fluente
+    - name:
+        en: French
+        it: Francese
+      level:
+        en: B2
+        it: B2

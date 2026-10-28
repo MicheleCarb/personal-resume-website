@@ -1,0 +1,52 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { localize, ui, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+  skills: CollectionEntry<"profile">["data"]["skills"];
+}
+
+const { lang, skills } = Astro.props;
+const t = ui[lang];
+---
+
+<section class="skills" aria-labelledby="skills-heading">
+  <h2 id="skills-heading">{t["skills.heading"]}</h2>
+  <dl>
+    {skills.map(({ group, items }) => (
+      <div>
+        <dt>{group[lang]}</dt>
+        <dd>{items.map((item) => localize(item, lang)).join(", ")}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<style>
+  .skills {
+    margin-top: var(--space-8);
+  }
+
+  h2 {
+    margin-bottom: var(--space-5);
+    font-size: var(--text-xl);
+    font-weight: 800;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-5) var(--space-6);
+    margin: 0;
+  }
+
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: var(--space-1) 0 0;
+    color: var(--ink-muted);
+  }
+</style>

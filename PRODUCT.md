@@ -44,12 +44,15 @@ The career is presented as a software-delivery pipeline: completed education and
 - The pipeline is the single memorable concept; everything around it stays quiet.
 - Status semantics: green for completed, blue for running, neutral grey for pending, always paired with a text label and marker.
 - Explicitly rejected: generic portfolio-card grids, purple gradients, glassmorphism, fake terminals, decorative dashboards, meaningless metrics or charts, excessive rounded containers, large or continuous animation.
-- Owner-approved exception: the running station's marker spins like a build in progress (small, one element only, static under reduced motion).
+- Owner-approved exceptions:
+  - The running station's marker spins like a build in progress.
+  - Section focus while scrolling: the station crossing the viewport's central reading band is at full opacity and its marker is highlighted on the line; the other stations are attenuated (text never below 0.78 opacity, so every text colour stays at WCAG AA). The line's chevrons also flow upward with scroll.
+  - All motion is opacity/transform only (plus the chevrons' mask position), CSS-only with no JavaScript, gated behind `@supports`, and fully static under `prefers-reduced-motion` or where scroll timelines are unsupported.
 - The shared handle `michelecarb` is shown verbatim in the masthead for LinkedIn, GitHub and the website, aligned so the three read as one identity.
 
 ## Evidence on Hand
 
-Owner-supplied resume content (education, roles, dates, skills, certifications, languages, links) is collected with sources in [docs/content-inventory.md](docs/content-inventory.md). Still missing: the final resume PDF. No photo for now. Nothing may be invented: no placeholder employers, achievements, metrics, testimonials, or future roles presented as fact.
+Owner-supplied resume content (education, roles, dates, skills, certifications, languages, links) is collected with sources in [docs/content-inventory.md](docs/content-inventory.md). Still missing: the final resume PDF (the site shows "CV (PDF): coming soon" until it is added; see `TODO(cv)`). No photo for now. Nothing may be invented: no placeholder employers, achievements, metrics, testimonials, or future roles presented as fact.
 
 ## Product Principles
 
