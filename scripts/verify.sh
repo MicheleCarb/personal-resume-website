@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Single verification entry point, used locally and in CI.
 #
-# No technology stack has been selected yet, so this only checks the
-# repository governance files. Lint, type-check, test, and build commands
-# will be added here once the stack is chosen.
+# The application has not been initialized yet, so this only checks the
+# repository governance files. The stack checks listed in
+# docs/decisions/0005-verification-strategy.md are added with the foundation.
 
 set -euo pipefail
 
@@ -42,8 +42,8 @@ else
 fi
 
 echo
-echo "NOTE: No technology stack selected yet. Stack-specific checks"
-echo "      (lint, type-check, tests, production build) will be added"
-echo "      after the stack decision is recorded in docs/decisions/."
+echo "NOTE: Application not initialized yet. Stack checks (format, lint,"
+echo "      type check, unit tests, build, accessibility tests) are added"
+echo "      with the foundation increment; see ADR 0005."
 echo
 echo "OK: verification passed"

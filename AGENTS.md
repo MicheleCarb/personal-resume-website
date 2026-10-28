@@ -6,7 +6,7 @@ Tool-neutral expectations for any AI assistant (Claude Code, GitHub Copilot, or 
 
 A small, static personal resume website, to be hosted on GitHub Pages. No backend, database, or authentication.
 
-The technology stack has **not** been selected yet. Do not initialize a framework, create `package.json`, or install dependencies until the stack decision is recorded in `docs/decisions/`.
+The stack (Astro, static output) is recorded in `docs/decisions/`. Add dependencies only as part of an agreed increment, with a justification.
 
 ## Content integrity
 
@@ -35,6 +35,8 @@ Work in small, independently verifiable increments:
 | Architecture decision records | `docs/decisions/` |
 | Verification entry point | `scripts/verify.sh` (CI runs the same script) |
 | Product context (users, purpose, constraints) | `PRODUCT.md` |
+| Page design brief | `.impeccable/surfaces/` |
 | Design system | `DESIGN.md`, created by the Impeccable design workflow once a visual direction is built |
+| Resume content and sources | `docs/content-inventory.md` |
 
 Record significant technical decisions as ADRs in `docs/decisions/` instead of scattering rationale across other files.

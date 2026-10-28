@@ -31,4 +31,8 @@ What becomes easier or harder as a result?
 
 ## Index
 
-_No decisions recorded yet._
+- [0001](0001-static-site-with-astro.md) Static site with Astro
+- [0002](0002-github-pages-custom-domain.md) GitHub Pages via Actions on a custom domain
+- [0003](0003-bilingual-routing.md) Bilingual routing
+- [0004](0004-content-model.md) Career content model
+- [0005](0005-verification-strategy.md) Verification strategy

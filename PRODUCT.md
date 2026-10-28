@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Delegated: Astro with static output, chosen because the site is bilingual (built-in i18n routing avoids duplicating markup per language), career data benefits from schema-validated content collections, pages ship no JavaScript by default, and GitHub Pages subpath deployment is supported through the `base` setting. To be confirmed against alternatives during architecture definition and recorded as an ADR in `docs/decisions/`.
+Delegated to the assistant and confirmed by the owner: Astro, static output. See [docs/decisions/0001](docs/decisions/0001-static-site-with-astro.md).
 
 ## Users
 
@@ -27,14 +27,18 @@ The career is presented as a software-delivery pipeline: completed education and
 ## Capabilities and Constraints
 
 - Static site on GitHub Pages; no backend, database, authentication, or CMS.
-- Published in English and Italian. Italian content must be supplied or approved by the owner, not machine-translated without review.
+- Published in English and Italian. Italian text is drafted by the assistant from the English and must be reviewed and approved by the owner before publishing.
 - Career stages have exactly three states: completed (`SUCCESS`), current (`RUNNING`), and future (`PENDING` / `NEXT BUILD`). The future stage names no speculative employer or role.
 - Stage details use progressive disclosure; the page remains useful without JavaScript.
 - Links to LinkedIn and GitHub, and a downloadable resume.
-- Open decisions: whether projects sit inside the pipeline or in a separate section; whether an email address or location is public; light/dark mode; custom domain later.
+- Published at the custom domain `michelecarb.one` (served from the domain root, not a repository subpath).
+- No phone number or email address is published; contact goes through LinkedIn.
+- Internal employer application names are not published.
+- Open decisions: whether projects sit inside the pipeline or in a separate section; light/dark mode.
 
 ## Brand Commitments
 
+- Identity: Michele Carbone, under the single handle `michelecarb` across the website (`michelecarb.one`), LinkedIn (`linkedin.com/in/michelecarb`), and GitHub (`github.com/MicheleCarb`). The three should read as one consistent presence.
 - Qualities: restrained, professional, technical, clear, accessible, fast, distinctive without being gimmicky.
 - The pipeline is the single memorable concept; everything around it stays quiet.
 - Status semantics: green for completed, blue for running, neutral grey for pending, always paired with a text label and marker.
@@ -42,7 +46,7 @@ The career is presented as a software-delivery pipeline: completed education and
 
 ## Evidence on Hand
 
-None yet. Name, title, introduction, career stages, dates, skills, links, photo, and resume PDF are all to be supplied by the owner. Nothing may be invented: no placeholder employers, achievements, metrics, testimonials, or future roles presented as fact.
+Owner-supplied resume content (education, roles, dates, skills, certifications, languages, links) is collected with sources in [docs/content-inventory.md](docs/content-inventory.md). Still missing: professional headline, short introduction, photo (optional), and the final resume PDF. Nothing may be invented: no placeholder employers, achievements, metrics, testimonials, or future roles presented as fact.
 
 ## Product Principles
 

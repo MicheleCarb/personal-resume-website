@@ -4,7 +4,9 @@ Source for a small, static personal resume website, to be published on GitHub Pa
 
 ## Status
 
-Project governance is bootstrapped. The technology stack has not been selected yet, so there is no application code.
+Architecture is defined; implementation has not started. The site will be a static, bilingual (English/Italian) Astro site published at `https://michelecarb.one`.
+
+Requirements: Node 22 LTS (see `.nvmrc` once the foundation is initialized).
 
 ## Verification
 
@@ -12,10 +14,11 @@ Project governance is bootstrapped. The technology stack has not been selected y
 ./scripts/verify.sh
 ```
 
-CI runs the same script on every push and pull request. Stack-specific checks (lint, tests, build) are added once the stack is selected.
+CI runs the same script on every push and pull request. Stack checks (format, lint, type check, tests, build, accessibility) are added when the foundation is initialized; see [ADR 0005](docs/decisions/0005-verification-strategy.md).
 
 ## Documentation
 
 - [AGENTS.md](AGENTS.md): development workflow and expectations for AI assistants
-- [docs/architecture.md](docs/architecture.md): architecture and constraints
+- [PRODUCT.md](PRODUCT.md): product context
+- [docs/architecture.md](docs/architecture.md): stack, structure, and deployment
 - [docs/decisions/](docs/decisions/): architecture decision records
