@@ -205,7 +205,7 @@ describe("collectionIssues", () => {
 });
 
 describe("sortNewestFirst", () => {
-  test("orders pending, then running, then completed stages by end date", () => {
+  test("orders pending, then running, then completed stages by start date", () => {
     const older = work({
       steps: [{ role: t("A"), start: "2016", end: "2019" }],
     });

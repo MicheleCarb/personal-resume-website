@@ -2,6 +2,8 @@
 # Italian text is a draft pending owner review.
 michele:
   name: Michele Carbone
+  # Shared by LinkedIn, GitHub and the website; highlighted in the masthead.
+  handle: michelecarb
   headline: Software Engineer · DevOps
   location:
     en: Currently based in Nice, France
@@ -20,6 +22,7 @@ michele:
   links:
     linkedin: https://www.linkedin.com/in/michelecarb
     github: https://github.com/MicheleCarb
+    website: https://michelecarb.one
     # PLACEHOLDER: the PDF is added to public/cv/ in the content increment.
     cv: /cv/michele-carbone-cv.pdf
   repository: https://github.com/MicheleCarb/personal-resume-website

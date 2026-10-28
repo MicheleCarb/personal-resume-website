@@ -33,58 +33,291 @@ const steps = [...data.steps].reverse();
 ---
 
 <div class="stage" data-status={data.status}>
-  <h3 id={headingId}>{heading}</h3>
-  <p class="stage-status">
-    <span lang="en">{statusLabel}</span>
-    <span class="visually-hidden">({statusMeaning})</span>
-  </p>
-  {details.length > 0 && <p>{details.join(" · ")}</p>}
-
-  {steps.length > 0 && (
-    <ul class="steps">
-      {steps.map((step) => {
-        const role = step.role[lang];
-        const duration = formatDuration(step.start, step.end, lang, now);
-        return (
-          <li>
-            <h4>{role}</h4>
-            <p>
-              <time datetime={step.start}>
-                {formatPartialDate(step.start, lang)}
-              </time>
-              {" – "}
-              {step.end ? (
-                <time datetime={step.end}>
-                  {formatPartialDate(step.end, lang)}
-                </time>
-              ) : (
-                t["step.present"]
-              )}
-              {duration && ` · ${duration}`}
-            </p>
-            {step.summary && <p>{step.summary[lang]}</p>}
-            {step.highlights && (
-              <details>
-                <summary>
-                  {t["step.details"]}
-                  <span class="visually-hidden">: {role}</span>
-                </summary>
-                <ul>
-                  {step.highlights[lang].map((line) => (
-                    <li>{line}</li>
-                  ))}
-                </ul>
-              </details>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  )}
-
-  {data.technologies && (
-    <p>
-      {t["stage.technologies"]}: {data.technologies.join(", ")}
+  <span class="marker" aria-hidden="true">
+    {data.status === "success" && (
+      <svg viewBox="0 0 16 16" focusable="false">
+        <path d="M3.5 8.5l3 3 6-7" />
+      </svg>
+    )}
+  </span>
+  <div class="stage-body">
+    <h3 id={headingId}>{heading}</h3>
+    <p class="stage-status">
+      <span lang="en">{statusLabel}</span>
+      <span class="visually-hidden">({statusMeaning})</span>
     </p>
-  )}
+    {details.length > 0 && <p class="stage-org">{details.join(" · ")}</p>}
+
+    {steps.length > 0 && (
+      <ul class="steps">
+        {steps.map((step) => {
+          const role = step.role[lang];
+          const duration = formatDuration(step.start, step.end, lang, now);
+          return (
+            <li class="step">
+              <h4>{role}</h4>
+              <p class="step-when">
+                <time datetime={step.start}>
+                  {formatPartialDate(step.start, lang)}
+                </time>
+                {" – "}
+                {step.end ? (
+                  <time datetime={step.end}>
+                    {formatPartialDate(step.end, lang)}
+                  </time>
+                ) : (
+                  t["step.present"]
+                )}
+                {duration && (
+                  <span class="duration">
+                    <span aria-hidden="true"> · </span>
+                    {duration}
+                  </span>
+                )}
+              </p>
+              {step.summary && <p class="step-summary">{step.summary[lang]}</p>}
+              {step.highlights && (
+                <details>
+                  <summary>
+                    {t["step.details"]}
+                    <span class="visually-hidden">: {role}</span>
+                  </summary>
+                  <ul>
+                    {step.highlights[lang].map((line) => (
+                      <li>{line}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    )}
+
+    {data.technologies && (
+      <p class="stage-tech">
+        {t["stage.technologies"]}: {data.technologies.join(", ")}
+      </p>
+    )}
+  </div>
 </div>
+
+<style>
+  .stage {
+    --tone: var(--success);
+    position: relative;
+    container-type: inline-size;
+  }
+
+  .stage[data-status="running"] {
+    --tone: var(--running);
+  }
+
+  .stage[data-status="pending"] {
+    --tone: var(--pending);
+  }
+
+  /* Station marker, centred on the line drawn by Pipeline.astro. */
+  .marker {
+    position: absolute;
+    z-index: 1;
+    top: 0.15rem;
+    left: calc(var(--track-x) - var(--pad) - var(--marker) / 2);
+    display: grid;
+    place-items: center;
+    width: var(--marker);
+    height: var(--marker);
+    border: 0.3rem solid var(--line);
+    border-radius: 50%;
+    background: var(--tone);
+    color: var(--on-line);
+  }
+
+  .marker svg {
+    width: 70%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Running: a pale ring with a spinning arc, like a build in progress. */
+  [data-status="running"] .marker {
+    border: 0.4rem solid color-mix(in srgb, var(--tone) 22%, var(--ground));
+    background: var(--ground);
+  }
+
+  [data-status="running"] .marker::after {
+    content: "";
+    position: absolute;
+    inset: -0.4rem;
+    border: 0.4rem solid transparent;
+    border-top-color: var(--tone);
+    border-right-color: var(--tone);
+    border-radius: 50%;
+    animation: spin 1.1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  [data-status="pending"] .marker {
+    border: 0.2rem dashed var(--pending-line);
+    background: var(--ground);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  [data-status="running"] h3 {
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  }
+
+  .stage-status {
+    margin-top: var(--space-1);
+    color: var(--tone);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
+  .stage-org {
+    margin-top: var(--space-1);
+    color: var(--ink-muted);
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+    padding: 0;
+    list-style: none;
+  }
+
+  .step + .step {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  h4 {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .step-when {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .step-summary {
+    margin-top: var(--space-2);
+    max-width: var(--measure);
+  }
+
+  details {
+    margin-top: var(--space-2);
+  }
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    color: var(--running);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before {
+    content: "";
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 0.15rem solid currentColor;
+    border-bottom: 0.15rem solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 150ms ease-out;
+  }
+
+  details[open] > summary::before {
+    transform: rotate(45deg);
+  }
+
+  details ul {
+    display: grid;
+    gap: var(--space-2);
+    max-width: var(--measure);
+    padding-left: 1.1rem;
+  }
+
+  details li::marker {
+    color: var(--ink-muted);
+  }
+
+  .stage-tech {
+    margin-top: var(--space-5);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  /* Wide stages: status and dates move into a metadata column. */
+  @container (min-width: 44rem) {
+    .stage-body,
+    .step {
+      display: grid;
+      grid-template-columns: 10rem minmax(0, 1fr);
+      column-gap: var(--space-6);
+      align-items: baseline;
+    }
+
+    .stage-body > *,
+    .step > * {
+      grid-column: 2;
+    }
+
+    /* Child-qualified so these outrank the column-2 default above. */
+    .stage-body > .stage-status,
+    .step > .step-when {
+      grid-column: 1;
+      grid-row: 1 / span 4;
+      margin-top: 0;
+    }
+
+    .stage-body > .steps {
+      grid-column: 1 / -1;
+    }
+
+    .duration {
+      display: block;
+    }
+
+    .duration > span {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    summary::before {
+      transition: none;
+    }
+
+    /* Without motion the arc becomes a complete, static ring. */
+    [data-status="running"] .marker::after {
+      border-color: var(--tone);
+      animation: none;
+    }
+  }
+</style>

@@ -13,8 +13,8 @@ test.describe("career pipeline (English)", () => {
     await expect(pipeline(page).getByRole("heading", { level: 3 })).toHaveText([
       "Pipeline continues",
       "Amadeus IT Group",
-      "Polytechnic of Turin",
       "Stellantis",
+      "Polytechnic of Turin",
       "Polytechnic of Turin",
     ]);
   });
@@ -45,13 +45,16 @@ test.describe("career pipeline (English)", () => {
     await expect(current.getByText(/Dec 2024 – Present/)).toBeVisible();
   });
 
-  test("groups overlapping stages as parallel", async ({ page }) => {
-    const parallel = pipeline(page).locator(".parallel");
-    await expect(parallel).toContainText("Parallel stages");
-    await expect(parallel.getByRole("heading", { level: 3 })).toHaveText([
-      "Polytechnic of Turin",
-      "Stellantis",
-    ]);
+  test("shows Stellantis as the stage after the MSc, not in parallel", async ({
+    page,
+  }) => {
+    await expect(pipeline(page).locator(".parallel")).toHaveCount(0);
+    await expect(
+      pipeline(page).getByRole("heading", { level: 4 }).nth(3),
+    ).toHaveText("Master Thesis Researcher, then Engineering Specialist");
+    await expect(
+      pipeline(page).getByRole("heading", { level: 4 }).nth(4),
+    ).toHaveText("MSc in Computer Engineering, Cybersecurity");
   });
 
   test("opens step details from the keyboard", async ({ page }) => {
@@ -80,7 +83,7 @@ test.describe("career pipeline (Italian)", () => {
   test("uses Italian names, dates, and labels", async ({ page }) => {
     await page.goto("/it/");
     const section = page.getByRole("region", { name: "Pipeline di carriera" });
-    await expect(section.getByRole("heading", { level: 3 }).nth(2)).toHaveText(
+    await expect(section.getByRole("heading", { level: 3 }).nth(3)).toHaveText(
       "Politecnico di Torino",
     );
     await expect(section.getByText(/dic 2024 – Oggi/)).toBeVisible();
@@ -103,5 +106,26 @@ test.describe("without JavaScript", () => {
     await expect(
       pipeline(page).getByText(/AI knowledge assistants/),
     ).toBeVisible();
+  });
+});
+
+test.describe("running marker motion", () => {
+  const spinner = (page: Page) =>
+    page
+      .locator('[data-status="running"] .marker')
+      .evaluate((el) => getComputedStyle(el, "::after").animationName);
+
+  test("spins while the role is running", async ({ page }) => {
+    await page.goto("/");
+    expect(await spinner(page)).toBe("spin");
+  });
+
+  test("stays still under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    expect(await spinner(page)).toBe("none");
+    await expect(page.locator('[aria-current="step"]')).toContainText(
+      "RUNNING",
+    );
   });
 });

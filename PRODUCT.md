@@ -34,7 +34,8 @@ The career is presented as a software-delivery pipeline: completed education and
 - Published at the custom domain `michelecarb.one` (served from the domain root, not a repository subpath).
 - No phone number or email address is published; contact goes through LinkedIn.
 - Internal employer application names are not published.
-- Open decisions: whether projects sit inside the pipeline or in a separate section; light/dark mode.
+- Light and dark themes follow the system setting.
+- No projects section in the first version.
 
 ## Brand Commitments
 
@@ -43,10 +44,12 @@ The career is presented as a software-delivery pipeline: completed education and
 - The pipeline is the single memorable concept; everything around it stays quiet.
 - Status semantics: green for completed, blue for running, neutral grey for pending, always paired with a text label and marker.
 - Explicitly rejected: generic portfolio-card grids, purple gradients, glassmorphism, fake terminals, decorative dashboards, meaningless metrics or charts, excessive rounded containers, large or continuous animation.
+- Owner-approved exception: the running station's marker spins like a build in progress (small, one element only, static under reduced motion).
+- The shared handle `michelecarb` is shown verbatim in the masthead for LinkedIn, GitHub and the website, aligned so the three read as one identity.
 
 ## Evidence on Hand
 
-Owner-supplied resume content (education, roles, dates, skills, certifications, languages, links) is collected with sources in [docs/content-inventory.md](docs/content-inventory.md). Still missing: professional headline, short introduction, photo (optional), and the final resume PDF. Nothing may be invented: no placeholder employers, achievements, metrics, testimonials, or future roles presented as fact.
+Owner-supplied resume content (education, roles, dates, skills, certifications, languages, links) is collected with sources in [docs/content-inventory.md](docs/content-inventory.md). Still missing: the final resume PDF. No photo for now. Nothing may be invented: no placeholder employers, achievements, metrics, testimonials, or future roles presented as fact.
 
 ## Product Principles
 

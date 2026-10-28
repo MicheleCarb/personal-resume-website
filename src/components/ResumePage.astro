@@ -25,11 +25,22 @@ const stages = await getStages();
   <LanguageSwitch lang={lang} />
   <Header lang={lang} profile={profile} />
   <main id="main" tabindex="-1">
-    <section aria-labelledby="intro-heading">
-      <h2 id="intro-heading">{t["intro.heading"]}</h2>
+    <section class="intro" aria-labelledby="intro-heading">
+      <h2 id="intro-heading" class="visually-hidden">
+        {t["intro.heading"]}
+      </h2>
       <p>{profile.intro[lang]}</p>
     </section>
     <Pipeline stages={stages} lang={lang} />
   </main>
   <Footer lang={lang} repository={profile.repository} />
 </Base>
+
+<style>
+  .intro {
+    margin-top: var(--space-5);
+    max-width: var(--measure);
+    font-size: var(--text-lg);
+    line-height: 1.55;
+  }
+</style>

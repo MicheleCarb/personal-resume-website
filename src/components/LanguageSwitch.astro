@@ -12,7 +12,7 @@ const others = (Object.keys(languages) as Lang[]).filter(
 );
 ---
 
-<nav aria-label={ui[lang].languageNav}>
+<nav class="language" aria-label={ui[lang].languageNav}>
   <ul>
     {others.map((code) => (
       <li>
@@ -23,3 +23,24 @@ const others = (Object.keys(languages) as Lang[]).filter(
     ))}
   </ul>
 </nav>
+
+<style>
+  .language {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--space-3);
+  }
+
+  ul {
+    display: flex;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: inline-block;
+    padding: var(--space-2) 0;
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+</style>

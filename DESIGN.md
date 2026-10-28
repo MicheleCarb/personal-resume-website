@@ -1,0 +1,191 @@
+---
+name: Michele Carbone · Career Pipeline
+description: A resume drawn as one transit line, read like a station diagram.
+colors:
+  ground: "#ffffff"
+  ink: "#14213d"
+  ink-muted: "#4a5568"
+  rule: "#d8dde5"
+  line: "#14213d"
+  on-line: "#ffffff"
+  success: "#17733f"
+  running: "#1d56c4"
+  pending: "#6b7480"
+  pending-line: "#8d96a2"
+  selection: "#d6e3fb"
+  dark-ground: "#0d1424"
+  dark-ink: "#e6ebf3"
+  dark-ink-muted: "#a7b1c2"
+  dark-rule: "#28324a"
+  dark-line: "#dbe2ee"
+  dark-success: "#4cc48a"
+  dark-running: "#7eaaff"
+  dark-pending: "#9aa3b2"
+  dark-pending-line: "#6f7a8c"
+typography:
+  display:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "clamp(2.25rem, 1.5rem + 3.2vw, 3.5rem)"
+    fontWeight: 800
+    lineHeight: 1.05
+    letterSpacing: "-0.02em"
+  station:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 800
+    lineHeight: 1.2
+    letterSpacing: "-0.01em"
+  station-running:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "clamp(1.5rem, 1.2rem + 1.2vw, 2rem)"
+    fontWeight: 800
+    lineHeight: 1.2
+    letterSpacing: "-0.01em"
+  role:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 700
+    lineHeight: 1.2
+  body:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "1.0625rem"
+    fontWeight: 400
+    lineHeight: 1.6
+  status:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "0.8125rem"
+    fontWeight: 800
+    letterSpacing: "0.12em"
+  meta:
+    fontFamily: "Hanken Grotesk Variable, system-ui, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 600
+rounded:
+  marker: "50%"
+  focus: "2px"
+  branch: "2.5rem"
+spacing:
+  "1": "0.25rem"
+  "2": "0.5rem"
+  "3": "0.75rem"
+  "4": "1rem"
+  "5": "1.5rem"
+  "6": "2rem"
+  "7": "3rem"
+  "8": "4.5rem"
+components:
+  line:
+    backgroundColor: "{colors.line}"
+    width: "0.75rem"
+  marker-success:
+    backgroundColor: "{colors.success}"
+    textColor: "{colors.on-line}"
+    rounded: "{rounded.marker}"
+    size: "1.75rem"
+  marker-running:
+    backgroundColor: "{colors.ground}"
+    rounded: "{rounded.marker}"
+    size: "1.75rem"
+  marker-pending:
+    backgroundColor: "{colors.ground}"
+    rounded: "{rounded.marker}"
+    size: "1.75rem"
+  details-summary:
+    textColor: "{colors.running}"
+    height: "2.75rem"
+---
+
+# Design System: Michele Carbone · Career Pipeline
+
+## Overview
+
+The career is one transit line drawn down the page, read like a station diagram. Stations are stages, the running station is where the train is now, the dashed segment above it is line under construction, and the oldest station is the line's origin. Chevrons cut into the line point upward: the line flows towards today, so completed stations read as behind the train while the page still lists the newest first for a recruiter's scan.
+
+Everything that is not the line stays quiet: ink type on a plain ground, one heavy signage rule under the masthead, no cards, badges, charts or shadows. Light and dark follow the system setting; both are first-class.
+
+## Colors
+
+Restrained strategy: neutrals plus three status colours, and the status colours appear only on the line's station markers and the status codes beside them.
+
+### Primary
+
+- **Ink** (`#14213d` / dark `#e6ebf3`): all text, the line, the masthead rule.
+- **Running blue** (`#1d56c4` / dark `#7eaaff`): the running marker, its status code, interactive text (Details summaries, hover, focus ring, caret).
+
+### Status
+
+- **Success green** (`#17733f` / dark `#4cc48a`): completed markers and status codes.
+- **Pending grey** (`#6b7480` text, `#8d96a2` dashed line / dark `#9aa3b2`, `#6f7a8c`).
+
+### Neutral
+
+- **Ground** (`#ffffff` / dark `#0d1424`), **ink-muted** (`#4a5568` / dark `#a7b1c2`) for dates and secondary lines, **rule** (`#d8dde5` / dark `#28324a`) for hairlines between role steps and above the footer.
+
+### Named Rules
+
+- **Colour lives on the line.** No coloured backgrounds, borders or panels anywhere else.
+- **A status is a mark before it is a hue.** Filled check, ring, dashed ring, plus the text code; colour only reinforces.
+
+## Typography
+
+One self-hosted variable sans, Hanken Grotesk (OFL, via `@fontsource-variable/hanken-grotesk`), with tabular figures everywhere so dates align. No monospace: dates and durations are set in the same face as signage would be.
+
+### Hierarchy
+
+- **Display** (name): 800, fluid 2.25–3.5rem, tight tracking.
+- **Station** (h3, organization): 800, 1.5rem; the running station grows to 2rem.
+- **Role** (h4): 700, 1.125rem.
+- **Body**: 400, 1.0625rem / 1.6, measure capped at 68ch; the intro is set one step larger.
+- **Status code**: 800, 0.8125rem, tracked 0.12em, in its status colour, kept in English on both language versions.
+- **Meta** (dates, durations, locations): 600, 0.9375rem, ink-muted.
+
+## Layout
+
+- Single column, max 68rem, side gutter `clamp(1rem, 4vw, 2.5rem)`.
+- The line sits 1.1rem from the column edge; station content is indented 3.25rem.
+- Stations are 3rem apart; role steps within a station 1.5rem apart, separated by a hairline.
+- Container query on each station: from 44rem of station width, status and dates move into a 10rem left column and content takes the rest; narrower stations stack (phones, and the two parallel stations on desktop).
+- From 72rem of viewport, parallel stations (when the content has any) sit side by side and the line branches into a loop that passes through the second station and rejoins in the gap below.
+- Completed stations are ordered by start date, newest first.
+
+## Elevation & Depth
+
+Flat. No shadows and no depth effects.
+
+## Shapes
+
+Circles for station markers, a straight line with rounded corners only where the parallel branch turns (2.5rem radius). Everything else is square: no rounded containers.
+
+## Components
+
+### Line
+
+`0.75rem` wide ink bar per segment, masked with upward chevrons. The topmost segment (above running) is a dashed pending-line pattern without chevrons; the bottom segment stops at the origin station's marker.
+
+### Station markers
+
+1.75rem circles centred on the line. Success: green fill, ink border, authored SVG check in the ground colour. Running: ground fill on a pale running-blue ring, with a running-blue arc spinning around it (1.1s linear, like a build in progress); under reduced motion the arc becomes a complete static ring. Pending: ground fill, dashed pending-line border. Markers are `aria-hidden`; the status is always in text.
+
+### Parallel branch
+
+Supported by the content model (`parallelWith`) but unused in the current content. When present: a half-width ink line drawn as a rounded loop from the main line to the second station and back, with a small muted "Parallel stages" label above it.
+
+### Identity links
+
+The masthead lists LinkedIn, GitHub and the website as their real addresses, split around the shared handle. A three-column subgrid aligns every `michelecarb` in one column: prefix right-aligned in ink-muted, handle in 800 ink with a rule-coloured underline (running blue on hover), suffix in 800 ink. Each link's accessible name is "<Service>: <address>". From 48rem the block sits to the right of the name; the CV link follows it.
+
+### Details
+
+Native `<details>`. Summary in running blue, 700, min 2.75rem tall, with a CSS-drawn chevron that rotates on open (no transition under reduced motion). Highlights are a plain bulleted list at reading measure.
+
+### Links
+
+Ink text, 0.1em underline at 0.22em offset, running blue on hover, 3px running-blue focus ring with 3px offset. Masthead links get 0.5rem vertical padding for touch.
+
+## Do's and Don'ts
+
+- **Do** keep every new piece of colour on the line or a status code.
+- **Do** add stages by editing content files; the line, order and loop are derived.
+- **Don't** wrap stages in cards, add badges or pills, or put a label above a heading.
+- **Don't** introduce a second typeface or monospace for "technical" flavour.
+- **Don't** animate anything but the running marker's spinner, and never without a reduced-motion fallback.

@@ -29,7 +29,7 @@ for (const stage of stages) {
 }
 ---
 
-<section aria-labelledby="pipeline-heading">
+<section class="pipeline-section" aria-labelledby="pipeline-heading">
   <h2 id="pipeline-heading">{t["pipeline.heading"]}</h2>
   <ol class="pipeline">
     {groups.map((group) =>
@@ -41,7 +41,7 @@ for (const stage of stages) {
         </li>
       ) : (
         <li class="parallel">
-          <p>{t["pipeline.parallel"]}</p>
+          <p class="parallel-label">{t["pipeline.parallel"]}</p>
           <ul>
             {group.map((stage) => (
               <li>
@@ -54,3 +54,114 @@ for (const stage of stages) {
     )}
   </ol>
 </section>
+
+<style>
+  .pipeline-section {
+    margin-top: var(--space-7);
+  }
+
+  h2 {
+    margin-bottom: var(--space-5);
+    font-size: var(--text-xl);
+    font-weight: 800;
+  }
+
+  /* The line: --track-x is the line's centre, --pad the text indent. */
+  .pipeline {
+    --tw: 0.75rem;
+    --track-x: 1.1rem;
+    --marker: 1.75rem;
+    --pad: 3.25rem;
+    --gap: var(--space-7);
+    --marker-y: calc(0.15rem + var(--marker) / 2);
+    --chevrons: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath fill-rule='evenodd' d='M0 0H12V24H0Z M2.5 14.5 6 11 9.5 14.5 9.5 16.8 6 13.3 2.5 16.8Z'/%3E%3C/svg%3E");
+    display: grid;
+    gap: var(--gap);
+    padding: 0;
+    list-style: none;
+  }
+
+  .pipeline > li {
+    position: relative;
+    padding-left: var(--pad);
+  }
+
+  /* Each station draws the segment towards the older station below it.
+     Chevrons cut into the line point up: the line flows towards today. */
+  .pipeline > li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: calc(-1 * var(--gap));
+    left: calc(var(--track-x) - var(--tw) / 2);
+    width: var(--tw);
+    background: var(--line);
+    mask: var(--chevrons) center top / 100% 1.5rem repeat-y;
+  }
+
+  /* Line under construction above the running station. */
+  .pipeline > li:first-child::before {
+    top: var(--marker-y);
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--pending-line) 0 0.6rem,
+      transparent 0.6rem 1.1rem
+    );
+    mask: none;
+  }
+
+  /* Origin terminus: the line starts at the oldest station. */
+  .pipeline > li:last-child::before {
+    bottom: auto;
+    height: var(--marker-y);
+  }
+
+  .parallel > ul {
+    display: grid;
+    gap: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .parallel-label {
+    margin-bottom: var(--space-4);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  /* Wide screens: the parallel years branch off the line and rejoin it. */
+  @media (min-width: 72rem) {
+    .parallel > ul {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-6);
+    }
+
+    .parallel > ul > li + li {
+      padding-left: var(--pad);
+    }
+
+    .parallel-label {
+      margin-bottom: var(--space-7);
+    }
+
+    /* The branch leaves the line between the label and the stations, runs
+       through the second station's marker, and rejoins in the gap below. */
+    .parallel::after {
+      --col2: calc(
+        var(--pad) + (100% - var(--pad) - var(--space-6)) / 2 + var(--space-6)
+      );
+      content: "";
+      position: absolute;
+      top: calc(var(--text-sm) * 1.6 + var(--space-4));
+      bottom: calc(-0.5 * var(--gap));
+      left: calc(var(--track-x) - var(--tw) / 2);
+      --branch: calc(var(--tw) / 2);
+      width: calc(var(--col2) + var(--tw) / 2 + var(--branch) / 2);
+      border: var(--branch) solid var(--line);
+      border-left: 0;
+      border-radius: 0 2.5rem 2.5rem 0;
+      pointer-events: none;
+    }
+  }
+</style>

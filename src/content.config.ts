@@ -7,12 +7,14 @@ const profile = defineCollection({
   loader: file("src/content/profile.yaml"),
   schema: z.object({
     name: z.string().min(1),
+    handle: z.string().min(1),
     headline: z.string().min(1),
     location: localized,
     intro: localized,
     links: z.object({
       linkedin: z.url(),
       github: z.url(),
+      website: z.url(),
       cv: z.string().startsWith("/"),
     }),
     repository: z.url(),

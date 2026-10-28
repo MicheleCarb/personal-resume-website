@@ -1,5 +1,7 @@
 ---
+import "@fontsource-variable/hanken-grotesk";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import "../styles/global.css";
 import { languages, ui, type Lang } from "../i18n/ui";
 
 interface Props {
@@ -45,25 +47,23 @@ const otherLocales = alternates.filter((alt) => alt.code !== lang);
       />
     ))}
     <meta name="twitter:card" content="summary" />
-
-    <style>
-      /* Functional only; visual design comes later. Global so components
-         can mark text for screen readers only. */
-      :global(.visually-hidden),
-      .skip-link:not(:focus) {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-      }
-    </style>
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#0d1424"
+      media="(prefers-color-scheme: dark)"
+    />
   </head>
   <body>
     <a class="skip-link" href="#main">
       {t.skipLink}
     </a>
-    <slot />
+    <div class="page">
+      <slot />
+    </div>
   </body>
 </html>

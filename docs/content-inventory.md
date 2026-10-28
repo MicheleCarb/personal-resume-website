@@ -117,5 +117,5 @@ Sources:
 ## Still open
 
 1. **Gap Sep 2022 – Feb 2023.** Not covered by any stage; left as is so the pipeline doesn't imply continuity that isn't there.
-2. **Stellantis overlaps the MSc** (Oct 2021 – 2022). Design decision: overlapping (parallel) stages or ordering by start date.
+2. **Stellantis overlaps the MSc** (Oct 2021 – 2022): it began as the thesis and became full-time employment after graduation. Shown as the stage after the MSc, ordered by start date (owner decision).
 3. **Final resume PDF**: English only, linked from both language versions; file to be supplied.

@@ -23,3 +23,6 @@ dist/
 # Test reports
 playwright-report/
 test-results/
+
+# Impeccable decision-round sketches (regenerated per round)
+.impeccable/mocks/

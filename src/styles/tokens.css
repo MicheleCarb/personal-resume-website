@@ -1,0 +1,57 @@
+/* Design tokens: Line Diagram world. Colour is spent on the line's status
+   markers; everything else is ink on a quiet ground. */
+:root {
+  color-scheme: light dark;
+
+  --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
+
+  --ground: #ffffff;
+  --ink: #14213d;
+  --ink-muted: #4a5568;
+  --rule: #d8dde5;
+  --line: #14213d;
+  --on-line: #ffffff;
+
+  --success: #17733f;
+  --running: #1d56c4;
+  --pending: #6b7480;
+  --pending-line: #8d96a2;
+
+  --selection: #d6e3fb;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-display: clamp(2.25rem, 1.5rem + 3.2vw, 3.5rem);
+
+  --measure: 68ch;
+  --page-width: 68rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #0d1424;
+    --ink: #e6ebf3;
+    --ink-muted: #a7b1c2;
+    --rule: #28324a;
+    --line: #dbe2ee;
+    --on-line: #0d1424;
+
+    --success: #4cc48a;
+    --running: #7eaaff;
+    --pending: #9aa3b2;
+    --pending-line: #6f7a8c;
+
+    --selection: #24407a;
+  }
+}

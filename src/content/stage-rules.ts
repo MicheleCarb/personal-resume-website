@@ -153,12 +153,12 @@ function overlaps(a: Stage, b: Stage): boolean {
   return aStart <= bEnd && bStart <= aEnd;
 }
 
-/** Newest first, like a build history: pending, running, then by end date. */
+/** Newest first, like a build history: pending, running, then by start date. */
 export function sortNewestFirst(stages: StageEntry[]): StageEntry[] {
   const rank = { pending: 2, running: 1, success: 0 };
   return [...stages].sort(
     (a, b) =>
       rank[b.data.status] - rank[a.data.status] ||
-      span(b.data)[1] - span(a.data)[1],
+      span(b.data)[0] - span(a.data)[0],
   );
 }

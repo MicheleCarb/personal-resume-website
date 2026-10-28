@@ -11,18 +11,33 @@ const viewports = [
   { name: "desktop", width: 1280, height: 800 },
 ];
 
+const colorSchemes = ["light", "dark"] as const;
+
 for (const { path, lang } of pages) {
   for (const viewport of viewports) {
-    test(`${path} renders accessibly on ${viewport.name}`, async ({ page }) => {
-      await page.setViewportSize(viewport);
-      const response = await page.goto(path);
+    for (const colorScheme of colorSchemes) {
+      test(`${path} renders accessibly on ${viewport.name} in ${colorScheme} mode`, async ({
+        page,
+      }) => {
+        await page.emulateMedia({ colorScheme });
+        await page.setViewportSize(viewport);
+        const response = await page.goto(path);
 
-      expect(response?.ok()).toBe(true);
-      await expect(page.locator("html")).toHaveAttribute("lang", lang);
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+        expect(response?.ok()).toBe(true);
+        await expect(page.locator("html")).toHaveAttribute("lang", lang);
+        await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-      const results = await new AxeBuilder({ page }).analyze();
-      expect(results.violations).toEqual([]);
-    });
+        const results = await new AxeBuilder({ page }).analyze();
+        expect(results.violations).toEqual([]);
+
+        const overflow = await page.evaluate(
+          () => document.documentElement.scrollWidth - window.innerWidth,
+        );
+        expect(
+          overflow,
+          "page must not scroll horizontally",
+        ).toBeLessThanOrEqual(0);
+      });
+    }
   }
 }

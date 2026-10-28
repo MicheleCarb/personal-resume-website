@@ -8,8 +8,9 @@ const pages = [
     lang: "en",
     other: { name: "Italiano", path: "/it/", lang: "it" },
     links: {
-      linkedin: "LinkedIn profile",
-      github: "GitHub profile",
+      linkedin: "LinkedIn: linkedin.com/in/michelecarb",
+      github: "GitHub: github.com/michelecarb",
+      website: "Website: michelecarb.one",
       cv: "Download CV (PDF)",
     },
   },
@@ -18,8 +19,9 @@ const pages = [
     lang: "it",
     other: { name: "English", path: "/", lang: "en" },
     links: {
-      linkedin: "Profilo LinkedIn",
-      github: "Profilo GitHub",
+      linkedin: "LinkedIn: linkedin.com/in/michelecarb",
+      github: "GitHub: github.com/michelecarb",
+      website: "Sito web: michelecarb.one",
       cv: "Scarica il CV (PDF)",
     },
   },
@@ -31,7 +33,7 @@ for (const { path, other, links } of pages) {
       await page.goto(path);
     });
 
-    test("links to profiles and CV with descriptive names", async ({
+    test("links to profiles, website, and CV with descriptive names", async ({
       page,
     }) => {
       await expect(
@@ -40,6 +42,9 @@ for (const { path, other, links } of pages) {
       await expect(
         page.getByRole("link", { name: links.github }),
       ).toHaveAttribute("href", "https://github.com/MicheleCarb");
+      await expect(
+        page.getByRole("link", { name: links.website }),
+      ).toHaveAttribute("href", "https://michelecarb.one");
       await expect(page.getByRole("link", { name: links.cv })).toHaveAttribute(
         "href",
         "/cv/michele-carbone-cv.pdf",

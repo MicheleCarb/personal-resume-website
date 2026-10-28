@@ -1,4 +1,5 @@
-# Source: CV-AI.pdf. Overlaps with the MSc, so it is drawn as a parallel stage.
+# Source: CV-AI.pdf. Began as the MSc thesis, then full-time employment after
+# graduation; shown as the stage after the MSc (owner decision).
 # Italian text is a draft pending owner review.
 kind: work
 status: success
@@ -6,7 +7,6 @@ organization: Stellantis
 location:
   en: Turin, Italy
   it: Torino, Italia
-parallelWith: msc
 steps:
   - role:
       en: Master Thesis Researcher, then Engineering Specialist
