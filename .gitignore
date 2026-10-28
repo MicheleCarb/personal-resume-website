@@ -1,0 +1,12 @@
+# Local Claude Code settings (personal, not shared)
+.claude/settings.local.json
+
+# Environment files
+.env
+.env.*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
