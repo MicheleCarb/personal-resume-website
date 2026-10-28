@@ -43,65 +43,69 @@ const openFirst = data.status === "running";
     )}
   </span>
   <div class="stage-body">
-    <h3 id={headingId}>{heading}</h3>
-    <p class="stage-status">
-      <span lang="en">{statusLabel}</span>
-      <span class="visually-hidden">({statusMeaning})</span>
-    </p>
-    {details.length > 0 && <p class="stage-org">{details.join(" · ")}</p>}
-
-    {steps.length > 0 && (
-      <ul class="steps">
-        {steps.map((step, index) => {
-          const role = step.role[lang];
-          const duration = formatDuration(step.start, step.end, lang, now);
-          return (
-            <li class="step">
-              <h4>{role}</h4>
-              <p class="step-when">
-                <time datetime={step.start}>
-                  {formatPartialDate(step.start, lang)}
-                </time>
-                {" – "}
-                {step.end ? (
-                  <time datetime={step.end}>
-                    {formatPartialDate(step.end, lang)}
-                  </time>
-                ) : (
-                  t["step.present"]
-                )}
-                {duration && (
-                  <span class="duration">
-                    <span aria-hidden="true"> · </span>
-                    {duration}
-                  </span>
-                )}
-              </p>
-              {step.summary && <p class="step-summary">{step.summary[lang]}</p>}
-              {step.highlights && (
-                <details open={openFirst && index === 0}>
-                  <summary>
-                    {t["step.details"]}
-                    <span class="visually-hidden">: {role}</span>
-                  </summary>
-                  <ul>
-                    {step.highlights[lang].map((line) => (
-                      <li>{line}</li>
-                    ))}
-                  </ul>
-                </details>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    )}
-
-    {data.technologies && (
-      <p class="stage-tech">
-        {t["stage.technologies"]}: {data.technologies.join(", ")}
+    <div class="stage-content">
+      <h3 id={headingId}>{heading}</h3>
+      <p class="stage-status">
+        <span lang="en">{statusLabel}</span>
+        <span class="visually-hidden">({statusMeaning})</span>
       </p>
-    )}
+      {details.length > 0 && <p class="stage-org">{details.join(" · ")}</p>}
+
+      {steps.length > 0 && (
+        <ul class="steps">
+          {steps.map((step, index) => {
+            const role = step.role[lang];
+            const duration = formatDuration(step.start, step.end, lang, now);
+            return (
+              <li class="step">
+                <h4>{role}</h4>
+                <p class="step-when">
+                  <time datetime={step.start}>
+                    {formatPartialDate(step.start, lang)}
+                  </time>
+                  {" – "}
+                  {step.end ? (
+                    <time datetime={step.end}>
+                      {formatPartialDate(step.end, lang)}
+                    </time>
+                  ) : (
+                    t["step.present"]
+                  )}
+                  {duration && (
+                    <span class="duration">
+                      <span aria-hidden="true"> · </span>
+                      {duration}
+                    </span>
+                  )}
+                </p>
+                {step.summary && (
+                  <p class="step-summary">{step.summary[lang]}</p>
+                )}
+                {step.highlights && (
+                  <details open={openFirst && index === 0}>
+                    <summary>
+                      {t["step.details"]}
+                      <span class="visually-hidden">: {role}</span>
+                    </summary>
+                    <ul>
+                      {step.highlights[lang].map((line) => (
+                        <li>{line}</li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {data.technologies && (
+        <p class="stage-tech">
+          {t["stage.technologies"]}: {data.technologies.join(", ")}
+        </p>
+      )}
+    </div>
   </div>
 </div>
 
@@ -277,7 +281,7 @@ const openFirst = data.status === "running";
 
   /* Wide stages: status and dates move into a metadata column. */
   @container (min-width: 44rem) {
-    .stage-body,
+    .stage-content,
     .step {
       display: grid;
       grid-template-columns: 10rem minmax(0, 1fr);
@@ -285,20 +289,20 @@ const openFirst = data.status === "running";
       align-items: baseline;
     }
 
-    .stage-body > *,
+    .stage-content > *,
     .step > * {
       grid-column: 2;
     }
 
     /* Child-qualified so these outrank the column-2 default above. */
-    .stage-body > .stage-status,
+    .stage-content > .stage-status,
     .step > .step-when {
       grid-column: 1;
       grid-row: 1 / span 4;
       margin-top: 0;
     }
 
-    .stage-body > .steps {
+    .stage-content > .steps {
       grid-column: 1 / -1;
     }
 
@@ -385,6 +389,82 @@ const openFirst = data.status === "running";
       opacity: 0;
       transform: scale(0.6);
     }
+  }
+
+  /* Experimental pinned scrollytelling (class set by scrollytelling.ts on
+     wide screens with motion allowed). Each station is a card whose look
+     follows one weight, --w: 0 compact, 1 active. The script sets the card's
+     window height and position; nothing is hidden by swapping content, and
+     content outside the window stays in the page for screen readers.
+     Section focus is off in this layout. */
+  :global(.pipeline-section.is-scrolly)
+    .stage:not([data-status="pending"])
+    .marker,
+  :global(.pipeline-section.is-scrolly)
+    .stage:not([data-status="pending"])::after {
+    animation-name: none;
+  }
+
+  :global(.is-scrolly) .stage:not([data-status="pending"]) .stage-body {
+    overflow: hidden;
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid
+      color-mix(in srgb, var(--tone) calc(var(--w, 0) * 60%), var(--rule));
+    border-radius: 0.5rem;
+    /* Fades the window's bottom edge, so a compact card never shows a
+       sliver of the next line. */
+    mask-image: linear-gradient(black calc(100% - var(--space-4)), transparent);
+    background: color-mix(
+      in srgb,
+      var(--tone) calc(var(--w, 0) * 6%),
+      var(--ground)
+    );
+  }
+
+  :global(.is-scrolly) .stage:not([data-status="pending"]) .marker {
+    top: calc(var(--space-4) + 0.15rem);
+  }
+
+  :global(.is-scrolly) .stage:not([data-status="pending"])::after {
+    top: calc(var(--space-4) + 0.15rem - 0.55rem);
+  }
+
+  :global(.is-scrolly) .stage:not([data-status="pending"]) .marker {
+    transform: scale(calc(1 + 0.3 * var(--w, 0)));
+  }
+
+  :global(.is-scrolly) .stage:not([data-status="pending"])::after {
+    opacity: var(--w, 0);
+    transform: scale(calc(0.6 + 0.4 * var(--w, 0)));
+  }
+
+  :global(.is-scrolly) .steps {
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  :global(.is-scrolly) .step + .step {
+    padding-top: var(--space-3);
+  }
+
+  /* Compact the cards so the active one fits a laptop screen: highlights in
+     two columns, a smaller running heading. */
+  :global(.is-scrolly) details ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2) var(--space-6);
+    max-width: none;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
+  :global(.is-scrolly) [data-status="running"] h3 {
+    font-size: var(--text-xl);
+  }
+
+  /* Pinned mode only runs on wide, pointer-driven screens; 2rem still
+     clears the WCAG 2.2 minimum target size. */
+  :global(.is-scrolly) summary {
+    min-height: 2rem;
   }
 
   @media (prefers-reduced-motion: reduce) {

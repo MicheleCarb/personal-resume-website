@@ -30,6 +30,8 @@ Sources:
 
 - Polytechnic of Turin, Turin, Italy · 2016 – 2019 (CV)
 
+### Polytechnic of Turin (one station, owner decision 2026-10-28): both degrees below
+
 ### 2. MSc in Computer Engineering, Cybersecurity: SUCCESS
 
 - Polytechnic of Turin, Turin, Italy · 2019 – 2022 (CV)

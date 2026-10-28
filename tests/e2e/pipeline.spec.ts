@@ -1,6 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+// The static pipeline. From 64rem wide (with motion allowed) this branch pins
+// it instead; that layout is covered in scrollytelling.spec.ts.
+test.use({ viewport: { width: 960, height: 800 } });
+
 const pipeline = (page: Page) =>
   page.getByRole("region", { name: "Career pipeline" });
 
@@ -15,16 +19,15 @@ test.describe("career pipeline (English)", () => {
       "Amadeus IT Group",
       "Stellantis",
       "Polytechnic of Turin",
-      "Polytechnic of Turin",
     ]);
   });
 
   test("labels every stage status in text", async ({ page }) => {
     const statuses = pipeline(page).locator(".stage-status");
-    await expect(statuses).toHaveCount(5);
+    await expect(statuses).toHaveCount(4);
     await expect(statuses.nth(0)).toHaveText(/PENDING\s*\(Next\)/);
     await expect(statuses.nth(1)).toHaveText(/RUNNING\s*\(Current role\)/);
-    for (const i of [2, 3, 4]) {
+    for (const i of [2, 3]) {
       await expect(statuses.nth(i)).toHaveText(/SUCCESS\s*\(Completed\)/);
     }
   });
@@ -45,7 +48,7 @@ test.describe("career pipeline (English)", () => {
     await expect(current.getByText(/Dec 2024 – Present/)).toBeVisible();
   });
 
-  test("shows Stellantis as the stage after the MSc, not in parallel", async ({
+  test("shows Stellantis before one Polytechnic station holding both degrees", async ({
     page,
   }) => {
     await expect(pipeline(page).locator(".parallel")).toHaveCount(0);
@@ -55,6 +58,14 @@ test.describe("career pipeline (English)", () => {
     await expect(
       pipeline(page).getByRole("heading", { level: 4 }).nth(4),
     ).toHaveText("MSc in Computer Engineering, Cybersecurity");
+    const polytechnic = pipeline(page)
+      .locator(".stage")
+      .filter({ hasText: "Polytechnic of Turin" });
+    await expect(polytechnic).toHaveCount(1);
+    await expect(polytechnic.getByRole("heading", { level: 4 })).toHaveText([
+      "MSc in Computer Engineering, Cybersecurity",
+      "Bachelor in Computer Engineering",
+    ]);
   });
 
   test("opens the current role's details by default", async ({ page }) => {
@@ -109,7 +120,7 @@ test.describe("without JavaScript", () => {
   test("renders the pipeline and its expandable details", async ({ page }) => {
     await page.goto("/");
     await expect(pipeline(page).getByRole("heading", { level: 3 })).toHaveCount(
-      5,
+      4,
     );
     const summary = pipeline(page).locator("summary").nth(1);
     await summary.click();
@@ -193,16 +204,16 @@ test.describe("section focus", () => {
     });
   });
 
-  // Stations by index: 0 pending, 1 Amadeus, 2 Stellantis, 3 MSc, 4 Bachelor.
+  // Stations by index: 0 pending, 1 Amadeus, 2 Stellantis, 3 Polytechnic.
   for (const [index, label] of [
     [1, "Amadeus"],
     [2, "Stellantis"],
-    [3, "the MSc"],
+    [3, "the Polytechnic of Turin"],
   ] as const) {
     test(`focuses only ${label} when its heading is centred`, async ({
       page,
     }) => {
-      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.setViewportSize({ width: 960, height: 720 });
       await page.goto("/");
       await page.evaluate((i) => {
         const stage = document.querySelectorAll(".stage").item(i);
@@ -215,7 +226,7 @@ test.describe("section focus", () => {
 
       await expect
         .poll(async () => (await focusState(page)).map((s) => s.scale))
-        .toEqual([0, 1, 2, 3, 4].map((i) => (i === index ? 1.3 : 1)));
+        .toEqual([0, 1, 2, 3].map((i) => (i === index ? 1.3 : 1)));
       const state = await focusState(page);
       state.forEach((station, i) => {
         expect(station.ring, `ring of station ${i}`).toBe(i === index ? 1 : 0);

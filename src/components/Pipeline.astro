@@ -29,31 +29,45 @@ for (const stage of stages) {
 }
 ---
 
-<section class="pipeline-section" aria-labelledby="pipeline-heading">
+<section
+  class="pipeline-section"
+  aria-labelledby="pipeline-heading"
+  data-scrolly
+>
   <h2 id="pipeline-heading">{t["pipeline.heading"]}</h2>
-  <ol class="pipeline">
-    {groups.map((group) =>
-      group.length === 1 ? (
-        <li
-          aria-current={group[0].data.status === "running" ? "step" : undefined}
-        >
-          <PipelineStage stage={group[0]} lang={lang} now={now} />
-        </li>
-      ) : (
-        <li class="parallel">
-          <p class="parallel-label">{t["pipeline.parallel"]}</p>
-          <ul>
-            {group.map((stage) => (
-              <li>
-                <PipelineStage stage={stage} lang={lang} now={now} />
-              </li>
-            ))}
-          </ul>
-        </li>
-      ),
-    )}
-  </ol>
+  <div class="scrolly-track" data-scrolly-track>
+    <div class="scrolly-stage" data-scrolly-stage>
+      <ol class="pipeline">
+        {groups.map((group) =>
+          group.length === 1 ? (
+            <li
+              aria-current={
+                group[0].data.status === "running" ? "step" : undefined
+              }
+            >
+              <PipelineStage stage={group[0]} lang={lang} now={now} />
+            </li>
+          ) : (
+            <li class="parallel">
+              <p class="parallel-label">{t["pipeline.parallel"]}</p>
+              <ul>
+                {group.map((stage) => (
+                  <li>
+                    <PipelineStage stage={stage} lang={lang} now={now} />
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ),
+        )}
+      </ol>
+    </div>
+  </div>
 </section>
+
+<script>
+  import "../scripts/scrollytelling";
+</script>
 
 <style>
   .pipeline-section {
@@ -183,5 +197,55 @@ for (const stage of stages) {
     to {
       mask-position: center -48rem;
     }
+  }
+
+  /* Experimental pinned scrollytelling, enabled by scrollytelling.ts only on
+     wide screens with motion allowed. The stage is sticky; the stations are
+     stacked absolutely inside it and positioned by the script from one
+     continuous scroll progress. The per-station line segments give way to a
+     single line from the first card's marker to the last (--line-top and
+     --line-height, set by the script), so the line never breaks. */
+  .pipeline-section.is-scrolly .scrolly-stage {
+    position: sticky;
+  }
+
+  .pipeline-section.is-scrolly .pipeline {
+    position: relative;
+    height: 100%;
+  }
+
+  .pipeline-section.is-scrolly .pipeline > li {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+
+  .pipeline-section.is-scrolly .pipeline > li:not(:first-child)::before {
+    display: none;
+  }
+
+  .pipeline-section.is-scrolly .pipeline::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: var(--line-top, 0px);
+    left: calc(var(--track-x) - var(--tw) / 2);
+    width: var(--tw);
+    height: var(--line-height, 0px);
+    background: var(--line);
+    mask: var(--chevrons) center top / 100% 1.5rem repeat-y;
+    animation-name: flow;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root);
+  }
+
+  /* While pinned, the sections after the pipeline follow the last card
+     (offset set by the script), so they never sit behind a gap. */
+  .pipeline-section.is-scrolly ~ :global(*) {
+    transform: translateY(calc(-1 * var(--scrolly-pull, 0px)));
   }
 </style>

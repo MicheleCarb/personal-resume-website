@@ -1,4 +1,5 @@
-# Source: CV-AI.pdf. Only years are known for this degree.
+# Source: CV-AI.pdf. One station per organization: both degrees (owner
+# decision). Only years are known for these degrees.
 # Italian text is a draft pending owner review.
 kind: education
 status: success
@@ -9,6 +10,11 @@ location:
   en: Turin, Italy
   it: Torino, Italia
 steps:
+  - role:
+      en: Bachelor in Computer Engineering
+      it: Laurea Triennale in Ingegneria Informatica
+    start: "2016"
+    end: "2019"
   - role:
       en: MSc in Computer Engineering, Cybersecurity
       it: Laurea Magistrale in Ingegneria Informatica, Cybersecurity
