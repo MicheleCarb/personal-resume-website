@@ -44,7 +44,19 @@ const openFirst = data.status === "running";
   </span>
   <div class="stage-body">
     <div class="stage-content">
-      <h3 id={headingId}>{heading}</h3>
+      <h3 id={headingId}>
+        {data.logo && (
+          <img
+            class="logo"
+            src={data.logo}
+            alt=""
+            width="48"
+            height="48"
+            decoding="async"
+          />
+        )}
+        {heading}
+      </h3>
       <p class="stage-status">
         <span lang="en">{statusLabel}</span>
         <span class="visually-hidden">({statusMeaning})</span>
@@ -178,6 +190,9 @@ const openFirst = data.status === "running";
   }
 
   h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
     font-size: var(--text-xl);
     font-weight: 800;
     letter-spacing: -0.01em;
@@ -185,6 +200,17 @@ const openFirst = data.status === "running";
 
   [data-status="running"] h3 {
     font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  }
+
+  /* Organization logos sit on a white tile in both themes, so the navy
+     marks stay legible on the dark ground. */
+  .logo {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px var(--rule);
   }
 
   .stage-status {

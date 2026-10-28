@@ -6,6 +6,8 @@ status: success
 organization:
   en: Polytechnic of Turin
   it: Politecnico di Torino
+# Logo supplied by the owner (see DESIGN.md, Raster assets).
+logo: /logos/polytechnic-of-turin.png
 location:
   en: Turin, Italy
   it: Torino, Italia

@@ -32,6 +32,8 @@ export const stageSchema = z
     steps: z.array(step),
     technologies: z.array(text).optional(),
     link: z.url().optional(),
+    // Path under public/, shown beside the organization name.
+    logo: z.string().startsWith("/").optional(),
   })
   .superRefine((stage, ctx) => {
     for (const message of entryIssues(stage)) {

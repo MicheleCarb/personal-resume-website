@@ -4,6 +4,8 @@
 kind: work
 status: success
 organization: Stellantis
+# Logo supplied by the owner (see DESIGN.md, Raster assets).
+logo: /logos/stellantis.png
 location:
   en: Turin, Italy
   it: Torino, Italia

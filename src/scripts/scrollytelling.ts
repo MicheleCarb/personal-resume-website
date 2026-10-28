@@ -185,10 +185,22 @@ if (section && track && stage && list && page) {
     if (Math.abs(scrollY - target) > holds[index]) scrollTo({ top: target });
   };
 
+  // Re-measure whenever a card's content changes size (web font or logo
+  // arriving, viewport width changing), so windows always fit their content.
+  const observer = new ResizeObserver(() => {
+    if (!section.classList.contains("is-scrolly")) return;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      measure();
+      render();
+    });
+  });
+
   const enable = () => {
     section.classList.add("is-scrolly");
     measure();
     render();
+    contents.forEach((c) => observer.observe(c));
     addEventListener("scroll", onScroll, { passive: true });
     addEventListener("resize", onResize);
     section.addEventListener("focusin", onFocus);
@@ -196,6 +208,7 @@ if (section && track && stage && list && page) {
 
   const disable = () => {
     section.classList.remove("is-scrolly");
+    observer.disconnect();
     removeEventListener("scroll", onScroll);
     removeEventListener("resize", onResize);
     section.removeEventListener("focusin", onFocus);

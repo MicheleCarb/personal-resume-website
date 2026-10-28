@@ -209,11 +209,18 @@ After the pipeline, two quiet sections in the same type system: a definition lis
 - **Following content:** offset by `--scrolly-pull` (on the page wrapper) so it always sits right under the last card; it reaches zero when the pin releases.
 - **Access:** nothing is unmounted; content outside a window stays in the page. Focus entering a card scrolls to where it is fully open.
 
+### Name split (experiment, `exp/scrollytelling`)
+
+`src/scripts/name-split.ts` measures the name's two parts ("Michele Carb" and "one", via DOM Ranges) and their targets (each `.handle`, and the "one" of ".one"), then appends `aria-hidden` copies to the masthead with `--dx`, `--dy` and `--s` (height ratio). CSS scroll timelines (`scroll(root)`, range 0–160px, ease-out) move them; each copy switches from the name style to blue lowercase handle style sequentially (out 38–46%, in 46–54%) so two words never overlap, and fades out as it lands. While flying, `.is-splitting` clears the landing zone: handles and suffix fade to 0, prefixes to 0.8. Active from 48rem with motion allowed and scroll-timeline support; otherwise nothing is built.
+
 ### Details default
 
 The current role's first step opens by default; every other step starts collapsed.
 
 ### Raster assets
+
+Organization logos in `public/logos/` (96×96 PNG, shown at 2.25rem on a white tile with a 1px rule ring) were supplied by the owner and resized with ffmpeg; a small image-tool watermark in the Stellantis source was painted out in its background colour (#263780).
+
 
 `public/favicon.png` (64px), `public/apple-touch-icon.png` (180px) and `public/og-image.png` (1200×630) are rendered by `scripts/generate-images.mjs` from HTML using the site's font and light-theme tokens: a lowercase white "mc" monogram on ink, and a link preview showing a segment of the line beside the name, headline and the aligned `michelecarb` addresses.
 

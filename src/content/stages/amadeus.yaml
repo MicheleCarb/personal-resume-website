@@ -7,6 +7,8 @@ organization: Amadeus IT Group
 employmentNote:
   en: Consultant via Groupe SII
   it: Consulente tramite Groupe SII
+# Logo supplied by the owner (see DESIGN.md, Raster assets).
+logo: /logos/amadeus.png
 location:
   en: Nice, France
   it: Nizza, Francia
