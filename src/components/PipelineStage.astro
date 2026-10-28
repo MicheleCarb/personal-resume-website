@@ -1,0 +1,90 @@
+---
+import type { StageEntry } from "../content/stage-rules";
+import { localize, ui, type Lang } from "../i18n/ui";
+import { formatDuration, formatPartialDate } from "../lib/dates";
+
+interface Props {
+  stage: StageEntry;
+  lang: Lang;
+  now: Date;
+}
+
+const { stage, lang, now } = Astro.props;
+const t = ui[lang];
+const data = stage.data;
+
+// CI status words stay in English in both languages, like the tooling they
+// reference; the plain-language meaning is announced in the page language.
+const statusLabel = {
+  success: "SUCCESS",
+  running: "RUNNING",
+  pending: "PENDING",
+}[data.status];
+const statusMeaning = t[`status.${data.status}`];
+
+const headingId = `stage-${stage.id}`;
+const heading = data.organization
+  ? localize(data.organization, lang)
+  : t["pipeline.next"];
+const details = [data.employmentNote, data.location]
+  .filter((value) => value !== undefined)
+  .map((value) => localize(value, lang));
+const steps = [...data.steps].reverse();
+---
+
+<div class="stage" data-status={data.status}>
+  <h3 id={headingId}>{heading}</h3>
+  <p class="stage-status">
+    <span lang="en">{statusLabel}</span>
+    <span class="visually-hidden">({statusMeaning})</span>
+  </p>
+  {details.length > 0 && <p>{details.join(" · ")}</p>}
+
+  {steps.length > 0 && (
+    <ul class="steps">
+      {steps.map((step) => {
+        const role = step.role[lang];
+        const duration = formatDuration(step.start, step.end, lang, now);
+        return (
+          <li>
+            <h4>{role}</h4>
+            <p>
+              <time datetime={step.start}>
+                {formatPartialDate(step.start, lang)}
+              </time>
+              {" – "}
+              {step.end ? (
+                <time datetime={step.end}>
+                  {formatPartialDate(step.end, lang)}
+                </time>
+              ) : (
+                t["step.present"]
+              )}
+              {duration && ` · ${duration}`}
+            </p>
+            {step.summary && <p>{step.summary[lang]}</p>}
+            {step.highlights && (
+              <details>
+                <summary>
+                  {t["step.details"]}
+                  <span class="visually-hidden">: {role}</span>
+                </summary>
+                <ul>
+                  {step.highlights[lang].map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              </details>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  )}
+
+  {data.technologies && (
+    <p>
+      {t["stage.technologies"]}: {data.technologies.join(", ")}
+    </p>
+  )}
+</div>

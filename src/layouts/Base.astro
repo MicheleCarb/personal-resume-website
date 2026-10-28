@@ -47,7 +47,9 @@ const otherLocales = alternates.filter((alt) => alt.code !== lang);
     <meta name="twitter:card" content="summary" />
 
     <style>
-      /* Functional only: hidden until focused. Visual design comes later. */
+      /* Functional only; visual design comes later. Global so components
+         can mark text for screen readers only. */
+      :global(.visually-hidden),
       .skip-link:not(:focus) {
         position: absolute;
         width: 1px;

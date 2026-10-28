@@ -6,6 +6,7 @@ import { ui, type Lang } from "../i18n/ui";
 import Footer from "./Footer.astro";
 import Header from "./Header.astro";
 import LanguageSwitch from "./LanguageSwitch.astro";
+import Pipeline from "./Pipeline.astro";
 
 interface Props {
   lang: Lang;
@@ -17,8 +18,7 @@ const entry = await getEntry("profile", "michele");
 if (!entry) throw new Error("Profile entry 'michele' is missing");
 const profile = entry.data;
 const description = `${profile.headline}. ${profile.location[lang]}.`;
-// Validates the career data at build time; rendered by the pipeline increment.
-await getStages();
+const stages = await getStages();
 ---
 
 <Base lang={lang} title={profile.name} description={description}>
@@ -29,6 +29,7 @@ await getStages();
       <h2 id="intro-heading">{t["intro.heading"]}</h2>
       <p>{profile.intro[lang]}</p>
     </section>
+    <Pipeline stages={stages} lang={lang} />
   </main>
   <Footer lang={lang} repository={profile.repository} />
 </Base>

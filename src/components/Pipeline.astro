@@ -1,0 +1,56 @@
+---
+import type { StageEntry } from "../content/stage-rules";
+import { ui, type Lang } from "../i18n/ui";
+import PipelineStage from "./PipelineStage.astro";
+
+interface Props {
+  stages: StageEntry[];
+  lang: Lang;
+}
+
+const { stages, lang } = Astro.props;
+const t = ui[lang];
+const now = new Date();
+
+// Stages marked parallel share one list item, at the position of whichever
+// of them comes first in the newest-first order.
+const groups: StageEntry[][] = [];
+const placed = new Set<string>();
+for (const stage of stages) {
+  if (placed.has(stage.id)) continue;
+  const group = stages.filter(
+    (other) =>
+      other.id === stage.id ||
+      other.data.parallelWith === stage.id ||
+      stage.data.parallelWith === other.id,
+  );
+  group.forEach((member) => placed.add(member.id));
+  groups.push(group);
+}
+---
+
+<section aria-labelledby="pipeline-heading">
+  <h2 id="pipeline-heading">{t["pipeline.heading"]}</h2>
+  <ol class="pipeline">
+    {groups.map((group) =>
+      group.length === 1 ? (
+        <li
+          aria-current={group[0].data.status === "running" ? "step" : undefined}
+        >
+          <PipelineStage stage={group[0]} lang={lang} now={now} />
+        </li>
+      ) : (
+        <li class="parallel">
+          <p>{t["pipeline.parallel"]}</p>
+          <ul>
+            {group.map((stage) => (
+              <li>
+                <PipelineStage stage={stage} lang={lang} now={now} />
+              </li>
+            ))}
+          </ul>
+        </li>
+      ),
+    )}
+  </ol>
+</section>

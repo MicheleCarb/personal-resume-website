@@ -15,6 +15,15 @@ const en = {
   "intro.heading": "About",
   "footer.built": "Built on",
   "footer.source": "Source on GitHub",
+  "pipeline.heading": "Career pipeline",
+  "pipeline.parallel": "Parallel stages",
+  "pipeline.next": "Pipeline continues",
+  "status.success": "Completed",
+  "status.running": "Current role",
+  "status.pending": "Next",
+  "step.present": "Present",
+  "step.details": "Details",
+  "stage.technologies": "Technologies",
 };
 
 type UIStrings = Record<keyof typeof en, string>;
@@ -31,8 +40,25 @@ const it: UIStrings = {
   "intro.heading": "Profilo",
   "footer.built": "Generato il",
   "footer.source": "Codice sorgente su GitHub",
+  "pipeline.heading": "Pipeline di carriera",
+  "pipeline.parallel": "Fasi in parallelo",
+  "pipeline.next": "La pipeline continua",
+  "status.success": "Completato",
+  "status.running": "Ruolo attuale",
+  "status.pending": "Prossimo passo",
+  "step.present": "Oggi",
+  "step.details": "Dettagli",
+  "stage.technologies": "Tecnologie",
 };
 
 export const ui: Record<Lang, UIStrings> = { en, it };
 
 export const dateLocale: Record<Lang, string> = { en: "en-GB", it: "it-IT" };
+
+/** Content that is either the same in every language or given per language. */
+export function localize(
+  value: string | Record<Lang, string>,
+  lang: Lang,
+): string {
+  return typeof value === "string" ? value : value[lang];
+}

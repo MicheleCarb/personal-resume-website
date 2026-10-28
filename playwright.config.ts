@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 4321;
+// Not Astro's default 4321, so a running dev server is never mistaken for
+// the production build under test.
+const port = 4322;
 
 // Runs against the production build served by `astro preview`.
 export default defineConfig({
