@@ -32,7 +32,7 @@ const stages = await getStages();
   <LanguageSwitch lang={lang} />
   <Header lang={lang} profile={profile} />
   <main id="main" tabindex="-1">
-    <section class="intro" aria-labelledby="intro-heading">
+    <section class="intro" aria-labelledby="intro-heading" data-hero-intro>
       <h2 id="intro-heading" class="visually-hidden">
         {t["intro.heading"]}
       </h2>
@@ -54,5 +54,13 @@ const stages = await getStages();
     max-width: var(--measure);
     font-size: var(--text-lg);
     line-height: 1.55;
+  }
+
+  /* Desktop: a narrower intro leaves a right-hand column, where the contact
+     links settle during the hero animation (see Header.astro). */
+  @media (min-width: 48rem) {
+    .intro {
+      max-width: min(32rem, 100% - 22rem);
+    }
   }
 </style>

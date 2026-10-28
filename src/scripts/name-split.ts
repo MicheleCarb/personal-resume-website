@@ -1,11 +1,13 @@
-// Experimental name split (branch exp/scrollytelling). On the first scroll,
+// Experimental hero sequence (branch exp/scrollytelling). Over the first
+// 200px of scroll, one shared scroll timeline drives three things together:
 // decorative copies of the name break at the shared handle ("Michele Carb" |
-// "one"): "michelecarb" lifts into each handle row (LinkedIn, GitHub,
-// website) and "one" lands on ".one". The real heading and links never
-// text never changes (only its opacity, while the copies fly); the copies
-// are aria-hidden. This script only measures positions;
-// CSS scroll timelines move the copies. Off on phones (the links stack under
-// the name), under reduced motion, and where scroll timelines are missing.
+// "one"); the contact block descends from the top right to the column beside
+// the intro; and the copies land on the handles at the block's final
+// position, so "michelecarb" fills each row and "one" lands on ".one".
+// The real heading and link text never change (the handles only step aside
+// while the copies fly); the copies are aria-hidden and ignore the pointer.
+// This script only measures; CSS scroll timelines do all the motion. Off on
+// phones, under reduced motion, and where scroll timelines are missing.
 
 const header = document.querySelector<HTMLElement>("[data-name-split]");
 const heading = header?.querySelector("h1");
@@ -51,6 +53,19 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
     const suffixText = suffix?.firstChild;
     if (at < 0 || !handles.length || !(suffixText instanceof Text)) return;
 
+    // How far the contact block descends: centred beside the intro, if the
+    // intro leaves room for it on the right; otherwise it stays put.
+    const links = header.querySelector("nav")!.getBoundingClientRect();
+    const intro = document
+      .querySelector("[data-hero-intro]")
+      ?.getBoundingClientRect();
+    // Whole pixels, so the links settle with crisp, unblurred text.
+    const descent =
+      intro && intro.right + 24 <= links.left
+        ? Math.round(intro.top + (intro.height - links.height) / 2 - links.top)
+        : 0;
+    header.style.setProperty("--links-dy", `${descent}px`);
+
     const origin = header.getBoundingClientRect();
     const source = getComputedStyle(heading);
     overlay = document.createElement("div");
@@ -62,15 +77,19 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
       to: DOMRect,
       fromText: string,
       toText: string,
+      order: number,
+      part: "head" | "tail",
     ) => {
       const el = document.createElement("span");
       el.className = "split-piece";
+      el.dataset.part = part;
+      el.style.setProperty("--order", String(order));
       el.style.left = `${from.left - origin.left}px`;
       el.style.top = `${from.top - origin.top}px`;
       el.style.fontSize = source.fontSize;
       el.style.fontWeight = source.fontWeight;
       el.style.setProperty("--dx", `${to.left - from.left}px`);
-      el.style.setProperty("--dy", `${to.top - from.top}px`);
+      el.style.setProperty("--dy", `${to.top + descent - from.top}px`);
       el.style.setProperty("--s", String(to.height / from.height));
       const out = document.createElement("span");
       out.className = "split-from";
@@ -85,8 +104,17 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
     const head = rectOf(node, 0, node.data.indexOf(name) + at);
     const tailStart = node.data.indexOf(name) + at;
     const tail = rectOf(node, tailStart, tailStart + name.length - at);
-    handles.forEach((el) =>
-      piece(head, el.getBoundingClientRect(), name.slice(0, at), handle),
+    // The website row (with "one") leads and the rows above follow, so on the
+    // way down the copies spread apart instead of catching up on each other.
+    handles.forEach((el, i) =>
+      piece(
+        head,
+        el.getBoundingClientRect(),
+        name.slice(0, at),
+        handle,
+        handles.length - 1 - i,
+        "head",
+      ),
     );
     const end = suffixText.data.length;
     piece(
@@ -94,6 +122,8 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
       rectOf(suffixText, end - rest.length, end),
       name.slice(at),
       rest,
+      0,
+      "tail",
     );
     header.append(overlay);
     header.classList.add("is-splitting");

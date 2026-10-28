@@ -80,6 +80,61 @@ test.describe("name split on desktop", () => {
     }
   });
 
+  test("moves the contact block beside the intro without touching it or the pipeline", async ({
+    page,
+  }) => {
+    const pipelineTop = () =>
+      page.evaluate(
+        () =>
+          document.querySelector("#pipeline-heading")!.getBoundingClientRect()
+            .top + scrollY,
+      );
+    const before = await pipelineTop();
+    for (let y = 0; y <= 220; y += 20) {
+      await scrollToY(page, y);
+      const overlap = await page.evaluate(() => {
+        const links = document
+          .querySelector(".masthead nav")!
+          .getBoundingClientRect();
+        const intro = document
+          .querySelector("[data-hero-intro] p")!
+          .getBoundingClientRect();
+        return (
+          links.left < intro.right &&
+          links.right > intro.left &&
+          links.top < intro.bottom &&
+          links.bottom > intro.top
+        );
+      });
+      expect(overlap, `links overlap the intro at ${y}px`).toBe(false);
+    }
+    const settled = await page.evaluate(() => {
+      const links = document
+        .querySelector(".masthead nav")!
+        .getBoundingClientRect();
+      const intro = document
+        .querySelector("[data-hero-intro]")!
+        .getBoundingClientRect();
+      return links.top >= intro.top - 1 && links.bottom <= intro.bottom + 60;
+    });
+    expect(settled, "links settle beside the intro").toBe(true);
+    expect(await pipelineTop()).toBe(before);
+  });
+
+  test("keeps the links clickable while they move", async ({ page }) => {
+    await scrollToY(page, 100);
+    const hit = await page.evaluate(() => {
+      const link = document.querySelector(".identity a")!;
+      const r = link.getBoundingClientRect();
+      return (
+        document
+          .elementFromPoint(r.left + 4, r.top + r.height / 2)
+          ?.closest("a") === link
+      );
+    });
+    expect(hit).toBe(true);
+  });
+
   test("stays accessible mid-flight", async ({ page }) => {
     await scrollToY(page, 80);
     // The flying copies are aria-hidden, decorative and on screen only
@@ -101,6 +156,12 @@ for (const [name, setup] of [
     await page.goto("/");
     await page.waitForTimeout(300);
     await expect(page.locator(".split-piece")).toHaveCount(0);
+    await page.evaluate(() => scrollTo(0, 150));
+    expect(
+      await page
+        .locator(".masthead nav")
+        .evaluate((el) => getComputedStyle(el).transform),
+    ).toBe("none");
     await context.close();
   });
 }

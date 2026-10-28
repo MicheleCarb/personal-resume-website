@@ -72,6 +72,9 @@ const identities = [
 
 <style>
   .masthead {
+    /* Shared hero progress: every hero animation runs over this range of
+       root scroll, so they move as one sequence in both directions. */
+    --hero-end: 200px;
     position: relative;
     display: grid;
     gap: var(--space-5);
@@ -165,9 +168,9 @@ const identities = [
     }
   }
 
-  /* Experimental name split (exp/scrollytelling): decorative copies built by
-     name-split.ts fly from the name into the handles over the first 160px
-     of scroll, while the masthead is still on screen. Longhands only (a minifier folds a shorthand plus
+  /* Experimental hero sequence (exp/scrollytelling): decorative copies built
+     by name-split.ts fly from the name into the handles while the contact
+     block descends, over the shared --hero-end range. Longhands only (a minifier folds a shorthand plus
      animation-timeline into a declaration browsers reject). */
   :global(.name-split) {
     position: absolute;
@@ -186,7 +189,7 @@ const identities = [
     animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
     animation-fill-mode: both;
     animation-timeline: scroll(root);
-    animation-range: 0px 160px;
+    animation-range: calc(var(--order) * 20px) var(--hero-end);
   }
 
   :global(.split-from),
@@ -202,6 +205,12 @@ const identities = [
     animation-name: split-out;
   }
 
+  /* "one" stays prominent from the moment it leaves: it is the fragment
+     that becomes the website, michelecarb.one. */
+  :global(.split-piece[data-part="tail"] .split-from) {
+    color: var(--running);
+  }
+
   :global(.split-to) {
     position: absolute;
     top: 0;
@@ -211,6 +220,11 @@ const identities = [
     animation-name: split-in;
   }
 
+  /* Two legs: each copy first flies into its own handle slot where the
+     links started (top right, already at handle size, so the copies keep the
+     rows' spacing and never overlap), then rides down with the contact block
+     to its final position. It never crosses the headline, location or
+     intro. */
   @keyframes split-fly {
     0% {
       transform: none;
@@ -220,14 +234,16 @@ const identities = [
     90% {
       opacity: 1;
     }
+    45% {
+      transform: translate(var(--dx), calc(var(--dy) - var(--links-dy)))
+        scale(var(--s));
+    }
     100% {
       transform: translate(var(--dx), var(--dy)) scale(var(--s));
       opacity: 0;
     }
   }
 
-  /* Sequential, not overlapping: the name style leaves before the handle
-     style arrives, so two different words are never superimposed. */
   @keyframes split-out {
     38% {
       opacity: 1;
@@ -256,7 +272,7 @@ const identities = [
     animation-timing-function: linear;
     animation-fill-mode: both;
     animation-timeline: scroll(root);
-    animation-range: 0px 160px;
+    animation-range: 0px var(--hero-end);
   }
 
   .masthead:global(.is-splitting) :is(.handle, .suffix) {
@@ -286,6 +302,31 @@ const identities = [
     10%,
     85% {
       opacity: 0.8;
+    }
+  }
+
+  /* The contact block descends from the top right to the column beside the
+     intro (--links-dy, measured by the script), easing out with a slight
+     scale dip for depth. Transform only: the links stay readable and
+     clickable throughout, and nothing reflows. */
+  .masthead:global(.is-splitting) nav {
+    transform-origin: 100% 0;
+    animation-name: links-descend;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+    animation-fill-mode: both;
+    animation-timeline: scroll(root);
+    animation-range: 0px var(--hero-end);
+  }
+
+  @keyframes links-descend {
+    0% {
+      transform: none;
+    }
+    50% {
+      transform: translateY(calc(var(--links-dy) * 0.5)) scale(0.97);
+    }
+    100% {
+      transform: translateY(var(--links-dy));
     }
   }
 </style>

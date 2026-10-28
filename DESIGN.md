@@ -209,9 +209,15 @@ After the pipeline, two quiet sections in the same type system: a definition lis
 - **Following content:** offset by `--scrolly-pull` (on the page wrapper) so it always sits right under the last card; it reaches zero when the pin releases.
 - **Access:** nothing is unmounted; content outside a window stays in the page. Focus entering a card scrolls to where it is fully open.
 
-### Name split (experiment, `exp/scrollytelling`)
+### Hero sequence (experiment, `exp/scrollytelling`)
 
-`src/scripts/name-split.ts` measures the name's two parts ("Michele Carb" and "one", via DOM Ranges) and their targets (each `.handle`, and the "one" of ".one"), then appends `aria-hidden` copies to the masthead with `--dx`, `--dy` and `--s` (height ratio). CSS scroll timelines (`scroll(root)`, range 0–160px, ease-out) move them; each copy switches from the name style to blue lowercase handle style sequentially (out 38–46%, in 46–54%) so two words never overlap, and fades out as it lands. While flying, `.is-splitting` clears the landing zone: handles and suffix fade to 0, prefixes to 0.8. Active from 48rem with motion allowed and scroll-timeline support; otherwise nothing is built.
+One shared progress: every hero animation uses `animation-timeline: scroll(root)` over `0 → --hero-end` (200px, set on `.masthead`), so they move as one sequence and reverse cleanly. `src/scripts/name-split.ts` only measures, with the animation class removed so transforms never skew the numbers.
+
+- **Layout:** from 48rem the intro is `min(32rem, 100% - 22rem)` wide, opening a right-hand column beside it.
+- **Contact block:** descends by `--links-dy` (whole pixels; centred beside the intro, or 0 when the intro leaves no room) with a mid-way scale dip to 0.97 and an ease-out. Transform only, so the links stay readable and clickable and nothing reflows.
+- **Name copies:** `aria-hidden`, `pointer-events: none`. "Michele Carb" ×3 and "one" are measured with DOM Ranges; each targets its handle's final (descended) position. Two legs: first into its own original handle slot (already at handle size, keeping the rows' spacing), then down with the block. Staggered by 20px of scroll, the website row first, so the rows spread rather than converge. "one" is running blue from departure. Each copy switches from name style to blue lowercase handle style sequentially (out 38–46%, in 46–54%) and fades out on landing.
+- **Landing zone:** while flying, `.is-splitting` fades the real handles and suffix to 0 and dims prefixes to 0.8, restoring all at the end.
+- Active from 48rem with motion allowed and scroll-timeline support; otherwise nothing is built and the links stay top right.
 
 ### Details default
 
