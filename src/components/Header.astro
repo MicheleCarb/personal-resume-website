@@ -184,7 +184,7 @@ const identities = [
     line-height: normal;
     letter-spacing: -0.02em;
     white-space: pre;
-    transform-origin: 0 0;
+    transform-origin: 100% 0;
     animation-name: split-fly;
     animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
     animation-fill-mode: both;
@@ -214,32 +214,39 @@ const identities = [
   :global(.split-to) {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     color: var(--running);
     letter-spacing: 0;
     animation-name: split-in;
   }
 
-  /* Two legs: each copy first flies into its own handle slot where the
-     links started (top right, already at handle size, so the copies keep the
-     rows' spacing and never overlap), then rides down with the contact block
-     to its final position. It never crosses the headline, location or
-     intro. */
+  /* One continuous diagonal: each copy's position (translate) runs straight
+     from its part of the name to its handle's final spot beside the intro,
+     while the contact block descends on the same range to meet it there.
+     Size (scale) is keyed separately and reaches handle size within the
+     first 15%, so the shrinking word clears the headline and location instead
+     of sweeping across them; the path itself never bends. Copies stay
+     invisible until they have cleared the name (10%), so they appear at the
+     end of "Carbone" rather than on top of it. */
   @keyframes split-fly {
-    0% {
-      transform: none;
+    0%,
+    10% {
       opacity: 0;
     }
-    4%,
+    0% {
+      translate: 0 0;
+      scale: 1;
+    }
+    14%,
     90% {
       opacity: 1;
     }
-    45% {
-      transform: translate(var(--dx), calc(var(--dy) - var(--links-dy)))
-        scale(var(--s));
+    15% {
+      scale: var(--s);
     }
     100% {
-      transform: translate(var(--dx), var(--dy)) scale(var(--s));
+      translate: var(--dx) var(--dy);
+      scale: var(--s);
       opacity: 0;
     }
   }
@@ -265,17 +272,17 @@ const identities = [
   }
 
   /* While the copies fly (only when name-split.ts is active), the landing
-     zone clears: handles and ".one" step aside and prefixes dim (to 0.8,
+     zone clears: handles, ".one" and the CV line step aside and prefixes dim (to 0.8,
      which keeps them at WCAG AA), then all return exactly as the copies
      land. At rest the links are fully shown. */
-  .masthead:global(.is-splitting) :is(.handle, .suffix, .prefix) {
+  .masthead:global(.is-splitting) :is(.handle, .suffix, .prefix, .cv) {
     animation-timing-function: linear;
     animation-fill-mode: both;
     animation-timeline: scroll(root);
     animation-range: 0px var(--hero-end);
   }
 
-  .masthead:global(.is-splitting) :is(.handle, .suffix) {
+  .masthead:global(.is-splitting) :is(.handle, .suffix, .cv) {
     animation-name: landing-clear;
   }
 

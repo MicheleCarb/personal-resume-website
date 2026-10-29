@@ -135,6 +135,34 @@ test.describe("name split on desktop", () => {
     expect(hit).toBe(true);
   });
 
+  test("moves each copy along one straight diagonal", async ({ page }) => {
+    // Right edge and page top of each copy: its anchor point.
+    const anchors = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll(".split-piece")].map((el) => {
+          const r = el.getBoundingClientRect();
+          return [r.right, r.top + scrollY];
+        }),
+      );
+    const start = await anchors();
+    const samples: number[][][] = [];
+    for (let y = 0; y <= 200; y += 10) {
+      await scrollToY(page, y);
+      samples.push(await anchors());
+    }
+    start.forEach(([x0, y0], i) => {
+      const [x1, y1] = samples[samples.length - 1][i];
+      const [dx, dy] = [x1 - x0, y1 - y0];
+      expect(dx, `copy ${i} moves right`).toBeGreaterThan(0);
+      expect(dy, `copy ${i} moves down`).toBeGreaterThan(0);
+      for (const sample of samples) {
+        const [x, y] = [sample[i][0] - x0, sample[i][1] - y0];
+        const offLine = Math.abs(x * dy - y * dx) / Math.hypot(dx, dy);
+        expect(offLine, `copy ${i} off its diagonal`).toBeLessThan(1);
+      }
+    });
+  });
+
   test("stays accessible mid-flight", async ({ page }) => {
     await scrollToY(page, 80);
     // The flying copies are aria-hidden, decorative and on screen only

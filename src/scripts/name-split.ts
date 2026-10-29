@@ -88,7 +88,10 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
       el.style.top = `${from.top - origin.top}px`;
       el.style.fontSize = source.fontSize;
       el.style.fontWeight = source.fontWeight;
-      el.style.setProperty("--dx", `${to.left - from.left}px`);
+      // Anchored at the right edge: the copy shrinks toward the end of its
+      // word ("Carb|", "one|") and travels from there, like an arrow drawn
+      // from the end of the name.
+      el.style.setProperty("--dx", `${to.right - from.right}px`);
       el.style.setProperty("--dy", `${to.top + descent - from.top}px`);
       el.style.setProperty("--s", String(to.height / from.height));
       const out = document.createElement("span");
