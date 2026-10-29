@@ -42,7 +42,7 @@ export const stageSchema = z
   });
 
 export type Stage = z.infer<typeof stageSchema>;
-export type Step = Stage["steps"][number];
+type Step = Stage["steps"][number];
 export interface StageEntry {
   id: string;
   data: Stage;

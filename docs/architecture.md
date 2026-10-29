@@ -29,6 +29,7 @@ eslint.config.js, .prettierrc.json, vitest.config.ts, playwright.config.ts
 public/
   favicon.png, apple-touch-icon.png, og-image.png   # generated: npm run images
   robots.txt
+  logos/*.png                                        # organization logos (owner-supplied)
   cv/michele-carbone-cv.pdf                          # TODO(cv): not yet supplied
 scripts/
   verify.sh                # single verification entry point
@@ -36,6 +37,8 @@ scripts/
 src/
   content.config.ts        # collection schemas
   content/stages/*.yaml    # one file per career stage
+  content/stage-rules.ts   # stage schema and validation rules
+  content/stages.ts        # validated, newest-first stage list
   content/profile.yaml     # identity, links, skills, certifications
   i18n/ui.ts               # UI strings (en/it) and helpers
   layouts/Base.astro       # document shell, SEO and social metadata, hreflang
@@ -43,6 +46,9 @@ src/
   pages/index.astro        # English
   pages/it/index.astro     # Italian
   styles/                  # design tokens and global styles
+  lib/dates.ts             # partial-date formatting and durations
+  scripts/                 # exp/scrollytelling only: pinned pipeline cards
+                           # (scrollytelling.ts) and hero sequence (name-split.ts)
 tests/
   unit/                    # content-model rules (Vitest)
   e2e/                     # rendering and accessibility (Playwright + axe)

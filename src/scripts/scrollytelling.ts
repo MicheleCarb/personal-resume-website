@@ -137,7 +137,6 @@ if (section && track && stage && list && page) {
       li.style.transform = `translateY(${y}px) scale(${scale})`;
       li.style.opacity = String(1 - (1 - dimmedOpacity) * dim);
       li.style.setProperty("--w", w.toFixed(3));
-      li.toggleAttribute("data-active", w >= 0.5);
       bodies[i].style.height = `${height}px`;
       contents[i].style.transform = shift ? `translateY(${-shift}px)` : "";
       y += height * scale + gap;
@@ -216,7 +215,6 @@ if (section && track && stage && list && page) {
       ["transform", "opacity", "--w"].forEach((p) =>
         li.style.removeProperty(p),
       );
-      li.removeAttribute("data-active");
     });
     bodies.forEach((b) => b.style.removeProperty("height"));
     contents.forEach((c) => c.style.removeProperty("transform"));

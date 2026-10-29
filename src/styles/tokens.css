@@ -12,7 +12,7 @@
   --line: #14213d;
   --on-line: #ffffff;
 
-  /* Dark enough to stay AA at the 0.78 focus-dimming floor. */
+  /* Dark enough to stay AA at 0.78 opacity (receded pipeline cards). */
   --success: #0e5631;
   --running: #16439c;
   --pending: #3a4353;

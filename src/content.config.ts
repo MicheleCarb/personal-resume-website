@@ -17,7 +17,6 @@ const profile = defineCollection({
       website: z.url(),
       cv: z.string().startsWith("/").optional(),
     }),
-    repository: z.url(),
     skills: z.array(
       z.object({ group: localized, items: z.array(localizable).min(1) }),
     ),

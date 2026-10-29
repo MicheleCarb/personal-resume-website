@@ -61,8 +61,6 @@ const it: UIStrings = {
 
 export const ui: Record<Lang, UIStrings> = { en, it };
 
-export const dateLocale: Record<Lang, string> = { en: "en-GB", it: "it-IT" };
-
 /** Content that is either the same in every language or given per language. */
 export function localize(
   value: string | Record<Lang, string>,

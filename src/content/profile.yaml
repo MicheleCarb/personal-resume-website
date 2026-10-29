@@ -26,7 +26,6 @@ michele:
     # TODO(cv): add the PDF as public/cv/michele-carbone-cv.pdf, then set
     #   cv: /cv/michele-carbone-cv.pdf
     # Until then the masthead shows "CV (PDF): coming soon".
-  repository: https://github.com/MicheleCarb/personal-resume-website
   # Sources: CV-AI.pdf skills section; the two agentic groups replace the CV's
   # "AI" line (owner, 2026-10-28). Italian text is a draft pending owner review.
   skills:
