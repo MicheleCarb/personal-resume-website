@@ -1,4 +1,4 @@
-// Experimental hero sequence (branch exp/scrollytelling). Over the first
+// Hero sequence (desktop). Over the first
 // 200px of scroll, one shared scroll timeline drives three things together:
 // decorative copies of the name break at the shared handle ("Michele Carb" |
 // "one"); the contact block descends from the top right to the column beside

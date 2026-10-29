@@ -32,7 +32,7 @@ const en = {
 
 type UIStrings = Record<keyof typeof en, string>;
 
-// Draft translations, pending owner review.
+// Italian strings reviewed and approved by the owner.
 const it: UIStrings = {
   "meta.locale": "it_IT",
   skipLink: "Vai al contenuto",

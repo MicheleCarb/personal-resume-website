@@ -68,7 +68,7 @@ Sources:
 - Owned features end-to-end, from technical design and implementation to production deployment and post-release fixes. (CV, Tracker)
 - Designed, deployed, and optimized cloud infrastructure for mission-critical systems (Azure, OpenShift). (CV, Tracker)
 - Implemented CI/CD pipelines, environment automation, and observability tooling (Jenkins, Grafana, Splunk). (CV, Tracker)
-- Decreased cloud cost by 200k€/year (20%) implementing cost-optimization initiatives (e.g., HPA rollouts). (CV, Tracker)
+- Decreased cloud cost by more than 200k€/year (over 20%) implementing cost-optimization initiatives (e.g., HPA rollouts). (CV, Tracker; owner corrected to "more than", 2026-10-29)
 - Supported the deployment and stability of our application across five European cloud landing zones. (CV, Tracker)
 - Led a team of 15 engineers as Scrum Master and Product Owner across two major applications. (CV, Tracker, internal names removed)
 - Implemented and extended backend functionalities in C++ for high-performance services, supporting new message types. (Tracker only)
@@ -85,7 +85,7 @@ Sources:
 3. Supported the cloud migration of high-throughput backend systems processing 150k TPS in production.
 4. Designed, deployed, and optimized cloud infrastructure for mission-critical systems (Azure, OpenShift).
 5. Implemented CI/CD pipelines, environment automation, and observability tooling (Jenkins, Grafana, Splunk).
-6. Decreased cloud cost by 200k€/year (20%) through cost-optimization initiatives (e.g., HPA rollouts).
+6. Decreased cloud cost by more than 200k€/year (over 20%) through cost-optimization initiatives (e.g., HPA rollouts).
 7. Supported the deployment and stability of our application across five European cloud landing zones.
 8. Led a team of 15 engineers as Scrum Master and Product Owner across two major applications.
 
@@ -95,7 +95,7 @@ Sources:
 
 ## Skills (CV)
 
-- Programming: C, C++, Java (production); Python and Bash (automation and tooling)
+- Programming: C, C++, Java; Python and Bash (automation and tooling) ("production" dropped, owner 2026-10-29)
 - Cloud & platforms: Azure, OpenShift, Kubernetes
 - DevOps: high-throughput distributed systems (150k TPS), CI/CD, Infrastructure as Code, Git, ArgoCD, Kafka
 - Tools: Linux (daily CLI, Ubuntu), Jenkins, Grafana, Splunk
@@ -113,7 +113,7 @@ Sources:
 ## Owner decisions
 
 - **Throughput:** state 150k TPS; the "over one million TPS" line is dropped.
-- **Disclosure:** internal application names are generalized; the 200k€/year (20%) saving and the 150k TPS figure are published.
+- **Disclosure:** internal application names are generalized; the more-than-200k€/year (over 20%) saving and the 150k TPS figure are published.
 - **Email:** not on the site; contact through LinkedIn.
 - **Structure:** Amadeus is one stage with three role steps; stages are ordered newest first; the next stage reads "Pipeline continues".
 - **Italian:** Claude drafts translations from the English; the owner reviews and approves before publishing.

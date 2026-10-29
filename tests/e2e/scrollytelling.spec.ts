@@ -1,4 +1,4 @@
-// Experimental pinned scrollytelling (branch exp/scrollytelling): three
+// Pinned scrollytelling: three
 // persistent cards in a sticky stage, driven by continuous scroll progress.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";

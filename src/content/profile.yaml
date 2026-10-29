@@ -1,5 +1,5 @@
 # Owner-supplied profile. Sources: docs/content-inventory.md.
-# Italian text is a draft pending owner review.
+# Italian text reviewed and approved by the owner (2026-10-29).
 michele:
   name: Michele Carbone
   # Shared by LinkedIn, GitHub and the website; highlighted in the masthead.
@@ -27,14 +27,13 @@ michele:
     #   cv: /cv/michele-carbone-cv.pdf
     # Until then the masthead shows "CV (PDF): coming soon".
   # Sources: CV-AI.pdf skills section; the two agentic groups replace the CV's
-  # "AI" line (owner, 2026-10-28). Italian text is a draft pending owner review.
+  # "AI" line (owner, 2026-10-28).
   skills:
     - group:
         en: Programming
         it: Programmazione
       items:
-        - en: C, C++, Java (production)
-          it: C, C++, Java (in produzione)
+        - C, C++, Java
         - en: Python, Bash (automation and tooling)
           it: Python, Bash (automazione e tooling)
     - group:

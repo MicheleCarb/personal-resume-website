@@ -1,4 +1,4 @@
-// Experimental name split and organization logos (branch exp/scrollytelling).
+// Hero name split and organization logos.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 

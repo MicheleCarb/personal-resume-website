@@ -47,7 +47,7 @@ src/
   pages/it/index.astro     # Italian
   styles/                  # design tokens and global styles
   lib/dates.ts             # partial-date formatting and durations
-  scripts/                 # exp/scrollytelling only: pinned pipeline cards
+  scripts/                 # desktop scroll effects: pinned pipeline cards
                            # (scrollytelling.ts) and hero sequence (name-split.ts)
 tests/
   unit/                    # content-model rules (Vitest)

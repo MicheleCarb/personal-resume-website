@@ -1,5 +1,5 @@
-// Experimental pinned scrollytelling for the career pipeline (branch
-// exp/scrollytelling). On wide screens with motion allowed, the pipeline is
+// Pinned scrollytelling for the career pipeline (desktop). On wide screens
+// with motion allowed, the pipeline is
 // pinned and its stations become persistent cards stacked in a sticky stage.
 // Scrolling drives one continuous progress value, p (0 = first station,
 // 1 = second, ...); every card's position, window height, scale, opacity and

@@ -63,7 +63,7 @@ typography:
 rounded:
   marker: "50%"
   focus: "2px"
-  card: "0.5rem" # experiment-only (exp/scrollytelling pinned cards)
+  card: "0.5rem" # pinned career cards
   branch: "2.5rem"
 spacing:
   "1": "0.25rem"
@@ -197,19 +197,19 @@ After the pipeline, two quiet sections in the same type system: a definition lis
 - Opacity and transform only (plus the chevron mask position). Static under reduced motion and in browsers without scroll timelines.
 - Write animation longhands, never the `animation` shorthand next to `animation-timeline`: the CSS minifier folds them into a shorthand that browsers reject.
 
-### Pinned scrollytelling (experiment, `exp/scrollytelling`)
+### Pinned scrollytelling (desktop)
 
 `src/scripts/scrollytelling.ts` adds `.is-scrolly` to the pipeline section when `(min-width: 64rem) and (prefers-reduced-motion: no-preference)` matches.
 
 - **Stage:** sticky at a 16px offset, sized for its final state (last card open), so the pin releases exactly where that layout ends. The stations are absolutely positioned inside it; the pending row stays at the top.
 - **Schedule:** measured once and on resize. Each card holds for 15vh plus any scroll needed to read content taller than its window; consecutive cards are joined by a 35vh transition with smoothstep easing. Progress `p` (0, 1, 2) is a pure function of scroll position.
 - **Per card, from its distance to `p`:** weight `w = 1 - |i - p|` drives the window height (compact header to full content, capped to the viewport), the accent (border and 6% tint mixed toward the status colour), the marker scale (1 + 0.3w) and the focus ring. Previous cards scale to 0.97 and fade to 0.78; upcoming cards fade at most to 0.89. While a card holds, its content moves up inside the window to reveal overflow, easing back to its header as it collapses.
-- **Card frame:** 1px border mixed from `--rule` toward the status colour, 0.5rem radius, bottom-edge fade mask so a compact window never shows a sliver of the next line. Experiment-only exception to "no cards".
+- **Card frame:** 1px border mixed from `--rule` toward the status colour, 0.5rem radius, bottom-edge fade mask so a compact window never shows a sliver of the next line. Owner-approved exception to "no cards".
 - **Line:** one continuous segment on the list (`--line-top`, `--line-height`) from the first card's marker to the last, with the chevron flow; the per-station segments are hidden.
 - **Following content:** offset by `--scrolly-pull` (on the page wrapper) so it always sits right under the last card; it reaches zero when the pin releases.
 - **Access:** nothing is unmounted; content outside a window stays in the page. Focus entering a card scrolls to where it is fully open.
 
-### Hero sequence (experiment, `exp/scrollytelling`)
+### Hero sequence (desktop)
 
 One shared progress: every hero animation uses `animation-timeline: scroll(root)` over `0 → --hero-end` (200px, set on `.masthead`), so they move as one sequence and reverse cleanly. `src/scripts/name-split.ts` only measures, with the animation class removed so transforms never skew the numbers.
 

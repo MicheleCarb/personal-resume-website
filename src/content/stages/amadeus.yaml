@@ -1,6 +1,6 @@
 # Source: CV-AI.pdf (see docs/content-inventory.md). Internal application
 # names are generalized; throughput is stated as 150k TPS (owner decisions).
-# Italian text is a draft pending owner review.
+# Italian text reviewed and approved by the owner (2026-10-29).
 kind: work
 status: running
 organization: Amadeus IT Group
@@ -68,7 +68,7 @@ steps:
         - Supported the cloud migration of high-throughput backend systems processing 150k TPS in production.
         - Designed, deployed, and optimized cloud infrastructure for mission-critical systems (Azure, OpenShift).
         - Implemented CI/CD pipelines, environment automation, and observability tooling (Jenkins, Grafana, Splunk).
-        - Decreased cloud cost by 200k€/year (20%) through cost-optimization initiatives (e.g., HPA rollouts).
+        - Decreased cloud cost by more than 200k€/year (over 20%) through cost-optimization initiatives (e.g., HPA rollouts).
         - Supported the deployment and stability of our application across five European cloud landing zones.
         - Led a team of 15 engineers as Scrum Master and Product Owner across two major applications.
       it:
@@ -76,6 +76,6 @@ steps:
         - Ho supportato la migrazione al cloud di sistemi backend ad alto throughput che elaborano 150k TPS in produzione.
         - Ho progettato, distribuito e ottimizzato infrastruttura cloud per sistemi mission-critical (Azure, OpenShift).
         - Ho implementato pipeline CI/CD, automazione degli ambienti e strumenti di osservabilità (Jenkins, Grafana, Splunk).
-        - Ho ridotto i costi cloud di 200k€/anno (20%) con iniziative di ottimizzazione (ad es. rollout di HPA).
+        - Ho ridotto i costi cloud di oltre 200k€/anno (oltre il 20%) con iniziative di ottimizzazione (ad es. rollout di HPA).
         - Ho supportato il deployment e la stabilità della nostra applicazione in cinque landing zone cloud europee.
         - Ho guidato un team di 15 ingegneri come Scrum Master e Product Owner su due applicazioni principali.
