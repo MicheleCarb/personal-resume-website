@@ -67,6 +67,7 @@ for (const stage of stages) {
 
 <script>
   import "../scripts/scrollytelling";
+  import "../scripts/running-marker";
 </script>
 
 <style>
@@ -179,26 +180,6 @@ for (const stage of stages) {
     }
   }
 
-  /* The chevrons travel upward while the page scrolls, so the line visibly
-     flows towards today. Static under reduced motion or without scroll
-     timelines. Longhands only (see PipelineStage.astro). */
-  @supports (animation-timeline: scroll()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .pipeline > li:not(:first-child)::before {
-        animation-name: flow;
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: scroll(root);
-      }
-    }
-  }
-
-  @keyframes flow {
-    to {
-      mask-position: center -48rem;
-    }
-  }
-
   /* Pinned scrollytelling, enabled by scrollytelling.ts only on
      wide screens with motion allowed. The stage is sticky; the stations are
      stacked absolutely inside it and positioned by the script from one
@@ -237,10 +218,6 @@ for (const stage of stages) {
     height: var(--line-height, 0px);
     background: var(--line);
     mask: var(--chevrons) center top / 100% 1.5rem repeat-y;
-    animation-name: flow;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: scroll(root);
   }
 
   /* While pinned, the sections after the pipeline follow the last card

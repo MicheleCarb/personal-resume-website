@@ -33,16 +33,10 @@ michele:
     # TODO(cv): add the PDF as public/cv/michele-carbone-cv.pdf, then set
     #   cv: /cv/michele-carbone-cv.pdf
     # Until then the masthead shows no CV line.
-  # Sources: CV-AI.pdf skills section; the two agentic groups replace the CV's
-  # "AI" line (owner, 2026-10-28).
+  # Sources: CV-AI.pdf skills section; the agentic items replace the CV's
+  # "AI" line (owner, 2026-10-28). Ordered by the positioning: cloud and
+  # DevOps first (owner, 2026-11-12).
   skills:
-    - group:
-        en: Programming
-        it: Programmazione
-      items:
-        - C, C++, Java
-        - en: Python, Bash (automation and tooling)
-          it: Python, Bash (automazione e tooling)
     - group:
         en: Cloud & Platforms
         it: Cloud e piattaforme
@@ -60,6 +54,13 @@ michele:
         - ArgoCD
         - Kafka
     - group:
+        en: Programming
+        it: Programmazione
+      items:
+        - C, C++, Java
+        - en: Python, Bash (automation and tooling)
+          it: Python, Bash (automazione e tooling)
+    - group:
         en: Tools
         it: Strumenti
       items:
@@ -72,9 +73,11 @@ michele:
         en: Agile
         it: Agile
       items: [Scrum, SAFe, Product Ownership, Scrum Master]
+    # The two agentic groups merged into one, items unchanged and in the
+    # same order (owner, 2026-11-12). Group name approved by the owner.
     - group:
-        en: Agent orchestration
-        it: Orchestrazione di agenti
+        en: AI & agentic development
+        it: AI e sviluppo agentico
       items:
         - en: Multi-agent workflows
           it: Workflow multi-agente
@@ -82,10 +85,11 @@ michele:
           it: assistenti AI per la knowledge base
         - en: context engineering
           it: context engineering
-    - group:
-        en: Agentic development
-        it: Sviluppo agentico
-      items: [Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP]
+        - Claude Code
+        - Cursor
+        - GitHub Copilot
+        - Claude Skills
+        - MCP
   certifications:
     - SAFe 6.0 Certified AI-Empowered Product Owner/Product Manager
     - SAFe 6.0 Certified Scrum Master

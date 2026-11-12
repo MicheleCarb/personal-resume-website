@@ -161,7 +161,9 @@ const openFirst = data.status === "running";
     stroke-linejoin: round;
   }
 
-  /* Running: a pale ring with a spinning arc, like a build in progress. */
+  /* Running: a pale ring with a spinning arc, like a build in progress.
+     The arc turns four times (under five seconds), then closes into a
+     complete ring, so nothing on the page moves indefinitely. */
   [data-status="running"] .marker {
     border: 0.4rem solid color-mix(in srgb, var(--tone) 22%, var(--ground));
     background: var(--ground);
@@ -175,12 +177,26 @@ const openFirst = data.status === "running";
     border-top-color: var(--tone);
     border-right-color: var(--tone);
     border-radius: 50%;
-    animation: spin 1.1s linear infinite;
+    animation:
+      spin 1.1s linear 4,
+      spin-settle 300ms ease-out 4.4s forwards;
+  }
+
+  /* running-marker.ts holds the spin until the station is on screen, and
+     replays it each time the station comes back into view. */
+  .stage[data-spin="wait"] .marker::after {
+    animation: none;
   }
 
   @keyframes spin {
     to {
       transform: rotate(1turn);
+    }
+  }
+
+  @keyframes spin-settle {
+    to {
+      border-color: var(--tone);
     }
   }
 
@@ -498,8 +514,9 @@ const openFirst = data.status === "running";
       transition: none;
     }
 
-    /* Without motion the arc becomes a complete, static ring. */
-    [data-status="running"] .marker::after {
+    /* Without motion the arc is a complete, static ring from the start. */
+    [data-status="running"] .marker::after,
+    .stage[data-spin] .marker::after {
       border-color: var(--tone);
       animation: none;
     }

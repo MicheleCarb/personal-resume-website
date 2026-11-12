@@ -154,7 +154,14 @@ const sections = [
   {
     path: "/",
     skills: "Skills",
-    groups: ["Programming", "Agent orchestration", "Agentic development"],
+    groups: [
+      "Cloud & Platforms",
+      "DevOps",
+      "Programming",
+      "Tools",
+      "Agile",
+      "AI & agentic development",
+    ],
     agentic: /Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP/,
     credentials: "Certifications & Languages",
     language: /Italian\s*·\s*Native/,
@@ -162,7 +169,14 @@ const sections = [
   {
     path: "/it/",
     skills: "Competenze",
-    groups: ["Programmazione", "Orchestrazione di agenti", "Sviluppo agentico"],
+    groups: [
+      "Cloud e piattaforme",
+      "DevOps",
+      "Programmazione",
+      "Strumenti",
+      "Agile",
+      "AI e sviluppo agentico",
+    ],
     agentic: /Claude Code, Cursor, GitHub Copilot, Claude Skills, MCP/,
     credentials: "Certificazioni e lingue",
     language: /Italiano\s*·\s*Madrelingua/,
@@ -183,11 +197,8 @@ for (const {
     await page.goto(path);
 
     const skillsSection = page.getByRole("region", { name: skills });
-    for (const group of groups) {
-      await expect(
-        skillsSection.getByText(group, { exact: true }),
-      ).toBeVisible();
-    }
+    // Ordered by the positioning: cloud and DevOps first, AI last.
+    await expect(skillsSection.locator("dt")).toHaveText(groups);
     await expect(skillsSection.getByText(agentic)).toBeVisible();
 
     const credentialsSection = page.getByRole("region", { name: credentials });

@@ -136,9 +136,60 @@ test.describe("running marker motion", () => {
       .locator('[data-status="running"] .marker')
       .evaluate((el) => getComputedStyle(el, "::after").animationName);
 
-  test("spins while the role is running", async ({ page }) => {
+  test("spins for a few seconds when the running station comes into view, then rests as a full ring", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 960, height: 500 });
     await page.goto("/");
-    expect(await spinner(page)).toBe("spin");
+    const stage = page.locator('.stage[data-status="running"]');
+    // Below the fold at this size: waiting, not spinning.
+    await expect(stage).toHaveAttribute("data-spin", "wait");
+    expect(await spinner(page)).toBe("none");
+
+    await stage.locator(".marker").scrollIntoViewIfNeeded();
+    await expect(stage).toHaveAttribute("data-spin", "go");
+    expect(await spinner(page)).toBe("spin, spin-settle");
+    const marker = page.locator('[data-status="running"] .marker');
+    // The spinner's own animations (the marker also carries section focus).
+    const total = await marker.evaluate((el) =>
+      Math.max(
+        ...el
+          .getAnimations({ subtree: true })
+          .filter((a) => (a as CSSAnimation).animationName.startsWith("spin"))
+          .map((a) => Number(a.effect!.getComputedTiming().endTime)),
+      ),
+    );
+    expect(total).toBeGreaterThan(0);
+    expect(total).toBeLessThanOrEqual(5000);
+
+    await marker.evaluate((el) =>
+      Promise.all(
+        el
+          .getAnimations({ subtree: true })
+          .filter((a) => (a as CSSAnimation).animationName.startsWith("spin"))
+          .map((a) => a.finished),
+      ),
+    );
+    const ring = await marker.evaluate((el) => {
+      const style = getComputedStyle(el, "::after");
+      return [
+        style.borderTopColor,
+        style.borderBottomColor,
+        style.borderLeftColor,
+      ];
+    });
+    expect(new Set(ring).size, "all sides drawn in one colour").toBe(1);
+    expect(ring[0]).not.toBe("rgba(0, 0, 0, 0)");
+  });
+
+  test("spins on load, still bounded, without JavaScript", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("/");
+    expect(await spinner(page)).toBe("spin, spin-settle");
+    await context.close();
   });
 
   test("stays still under reduced motion", async ({ page }) => {
@@ -190,7 +241,7 @@ test.describe("section focus", () => {
       }),
     );
 
-  test("attaches the focus animations and flows the chevrons", async ({
+  test("attaches the focus animations and keeps the chevrons still", async ({
     page,
   }) => {
     await page.goto("/");
@@ -200,7 +251,7 @@ test.describe("section focus", () => {
       success: "focus-marker",
       ring: "focus-ring",
       pending: "none",
-      line: "flow",
+      line: "none",
     });
   });
 
