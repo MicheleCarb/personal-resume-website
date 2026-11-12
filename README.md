@@ -52,7 +52,7 @@ Until the custom domain is attached, the default `github.io` address shows the p
 
 ## Open items
 
-- **CV PDF** (`TODO(cv)`): add `public/cv/michele-carbone-cv.pdf`, set `links.cv` in `src/content/profile.yaml`, and remove the `test.fixme` and the "coming soon" assertion in `tests/e2e/shell.spec.ts`. Until then the site shows "CV (PDF): coming soon".
+- **CV PDF** (`TODO(cv)`): add `public/cv/michele-carbone-cv.pdf`, set `links.cv` in `src/content/profile.yaml`, and remove the `test.fixme` and the "no CV line" assertion in `tests/e2e/shell.spec.ts`. Until then the site shows no CV line.
 
 ## Documentation
 

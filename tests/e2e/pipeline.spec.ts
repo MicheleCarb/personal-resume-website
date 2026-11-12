@@ -43,7 +43,7 @@ test.describe("career pipeline (English)", () => {
   test("shows the current role first with an open end", async ({ page }) => {
     const current = pipeline(page).locator('[aria-current="step"]');
     await expect(current.getByRole("heading", { level: 4 }).first()).toHaveText(
-      "Software Engineer · DevOps · Team Contributor",
+      "Software Engineer · DevOps · Scrum Master",
     );
     await expect(current.getByText(/Dec 2024 – Present/)).toBeVisible();
   });

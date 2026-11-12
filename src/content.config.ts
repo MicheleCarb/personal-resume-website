@@ -10,6 +10,7 @@ const profile = defineCollection({
     handle: z.string().min(1),
     headline: z.string().min(1),
     location: localized,
+    keyFacts: z.array(localized),
     intro: localized,
     links: z.object({
       linkedin: z.url(),

@@ -11,7 +11,11 @@ const pages = [
       linkedin: "LinkedIn: linkedin.com/in/michelecarb",
       github: "GitHub: github.com/michelecarb",
       website: "Website: michelecarb.one",
-      cvSoon: "CV (PDF): coming soon",
+    },
+    masthead: {
+      now: "Amadeus IT Group · Consultant via Groupe SII · since Feb 2023",
+      factsLabel: "Key results",
+      facts: [/more than 200k€\/year \(over 20%\)/, /150k TPS/],
     },
   },
   {
@@ -22,32 +26,51 @@ const pages = [
       linkedin: "LinkedIn: linkedin.com/in/michelecarb",
       github: "GitHub: github.com/michelecarb",
       website: "Sito web: michelecarb.one",
-      cvSoon: "CV (PDF): in arrivo",
+    },
+    masthead: {
+      now: "Amadeus IT Group · Consulente tramite Groupe SII · da feb 2023",
+      factsLabel: "Risultati principali",
+      facts: [/oltre 200k€\/anno \(oltre il 20%\)/, /150k TPS/],
     },
   },
 ];
 
-for (const { path, other, links } of pages) {
+for (const { path, other, links, masthead } of pages) {
   test.describe(path, () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(path);
     });
 
-    test("links to profiles and website, with the CV marked coming soon", async ({
+    test("names the current employer and key results on a phone's first screen", async ({
       page,
     }) => {
+      await page.setViewportSize({ width: 360, height: 800 });
+      const now = page.locator("[data-now]");
+      await expect(now).toContainText(/RUNNING\s*\(/);
+      await expect(now).toContainText(masthead.now);
+      const facts = page.getByRole("list", { name: masthead.factsLabel });
+      await expect(facts.getByRole("listitem")).toHaveText(masthead.facts);
+      for (const part of [now, facts]) {
+        const box = (await part.boundingBox())!;
+        expect(box.y + box.height).toBeLessThanOrEqual(800);
+      }
+    });
+
+    test("links to profiles and website, with no CV line until the PDF exists", async ({
+      page,
+    }) => {
+      const banner = page.getByRole("banner");
       await expect(
-        page.getByRole("link", { name: links.linkedin }),
+        banner.getByRole("link", { name: links.linkedin }),
       ).toHaveAttribute("href", "https://www.linkedin.com/in/michelecarb");
       await expect(
-        page.getByRole("link", { name: links.github }),
+        banner.getByRole("link", { name: links.github }),
       ).toHaveAttribute("href", "https://github.com/MicheleCarb");
       await expect(
-        page.getByRole("link", { name: links.website }),
+        banner.getByRole("link", { name: links.website }),
       ).toHaveAttribute("href", "https://michelecarb.one");
       // TODO(cv): once the PDF exists, expect a download link instead.
-      await expect(page.getByText(links.cvSoon)).toBeVisible();
-      await expect(page.getByRole("link", { name: /CV/ })).toHaveCount(0);
+      await expect(page.getByText(/CV/)).toHaveCount(0);
     });
 
     test("switches to the other language", async ({ page }) => {
@@ -91,7 +114,7 @@ for (const { path, other, links } of pages) {
         /\S/,
       );
       await expect(page).toHaveTitle(
-        "Michele Carbone · Software Engineer · DevOps",
+        "Michele Carbone · Software Engineer · Cloud & DevOps · Scrum Master",
       );
       await expect(head.locator('meta[property="og:image"]')).toHaveAttribute(
         "content",

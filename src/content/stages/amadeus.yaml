@@ -54,9 +54,13 @@ steps:
         - Ho supportato la transizione graduale dell'applicazione verso un'architettura cloud-ready in vista della migrazione su larga scala.
         - Ho facilitato i processi Scrum per migliorare la velocità del team e la trasparenza delle consegne.
         - Ho contribuito a infrastructure-as-code, deployment automatizzati e production readiness dei componenti cloud.
+  # Owner, 2026-11-12: Scrum Master and Product Owner from Dec 2024 to
+  # Dec 2025 (team of 15), then Scrum Master only with a technical focus.
+  # The last two highlights were reworded and approved by the owner
+  # (EN and IT, 2026-11-12).
   - role:
-      en: Software Engineer · DevOps · Team Contributor
-      it: Software Engineer · DevOps · Team Contributor
+      en: Software Engineer · DevOps · Scrum Master
+      it: Software Engineer · DevOps · Scrum Master
     start: 2024-12
     end: null
     summary:
@@ -70,7 +74,8 @@ steps:
         - Implemented CI/CD pipelines, environment automation, and observability tooling (Jenkins, Grafana, Splunk).
         - Decreased cloud cost by more than 200k€/year (over 20%) through cost-optimization initiatives (e.g., HPA rollouts).
         - Supported the deployment and stability of our application across five European cloud landing zones.
-        - Led a team of 15 engineers as Scrum Master and Product Owner across two major applications.
+        - Served for one year (Dec 2024 – Dec 2025) as both Scrum Master and Product Owner for a team of 15 engineers across two major applications, setting priorities and making delivery decisions.
+        - Continued as Scrum Master from Dec 2025, with the focus rebalanced towards hands-on engineering.
       it:
         - Ho progettato e messo in esercizio assistenti AI per la knowledge base, affinando l'orchestrazione degli agenti e le strategie di retrieval.
         - Ho supportato la migrazione al cloud di sistemi backend ad alto throughput che elaborano 150k TPS in produzione.
@@ -78,4 +83,5 @@ steps:
         - Ho implementato pipeline CI/CD, automazione degli ambienti e strumenti di osservabilità (Jenkins, Grafana, Splunk).
         - Ho ridotto i costi cloud di oltre 200k€/anno (oltre il 20%) con iniziative di ottimizzazione (ad es. rollout di HPA).
         - Ho supportato il deployment e la stabilità della nostra applicazione in cinque landing zone cloud europee.
-        - Ho guidato un team di 15 ingegneri come Scrum Master e Product Owner su due applicazioni principali.
+        - Sono stato per un anno (dic 2024 – dic 2025) sia Scrum Master sia Product Owner di un team di 15 ingegneri su due applicazioni principali, definendo le priorità e prendendo decisioni di delivery.
+        - Ho proseguito come Scrum Master da dic 2025, con il focus riequilibrato sulla parte tecnica.

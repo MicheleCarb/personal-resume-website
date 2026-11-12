@@ -50,7 +50,7 @@ const preview = page(
    </div>
    <div class="text">
      <h1>Michele Carbone</h1>
-     <p class="headline">Software Engineer · DevOps</p>
+     <p class="headline">Software Engineer · Cloud &amp; DevOps · Scrum Master</p>
      <ul>
        <li><span class="p">linkedin.com/in/</span><b>michelecarb</b><span></span></li>
        <li><span class="p">github.com/</span><b>michelecarb</b><span></span></li>

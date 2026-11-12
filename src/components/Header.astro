@@ -1,15 +1,29 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { ui, type Lang } from "../i18n/ui";
+import type { Stage } from "../content/stage-rules";
+import { localize, ui, type Lang } from "../i18n/ui";
+import { formatPartialDate } from "../lib/dates";
 
 interface Props {
   lang: Lang;
   profile: CollectionEntry<"profile">["data"];
+  /** The running stage: the masthead says where the line is now. */
+  current: Stage;
 }
 
-const { lang, profile } = Astro.props;
+const { lang, profile, current } = Astro.props;
 const t = ui[lang];
 const { handle, links } = profile;
+
+// Employer, employment note, and the start of the oldest step there.
+const now = [
+  current.organization,
+  current.employmentNote,
+  `${t["now.since"]} ${formatPartialDate(current.steps[0].start, lang)}`,
+]
+  .filter((value) => value !== undefined)
+  .map((value) => localize(value, lang))
+  .join(" · ");
 
 // Show each address as written ("linkedin.com/in/michelecarb"), split around
 // the shared handle so the three handles line up in one column.
@@ -36,7 +50,19 @@ const identities = [
   <div class="who">
     <h1>{profile.name}</h1>
     <p class="headline">{profile.headline}</p>
+    <p class="now" data-now>
+      <span class="now-status">
+        <span lang="en">RUNNING</span>
+        <span class="visually-hidden">({t["status.running"]})</span>
+      </span>
+      {now}
+    </p>
     <p class="location">{profile.location[lang]}</p>
+    <ul class="key-facts" aria-label={t["facts.label"]} data-key-facts>
+      {profile.keyFacts.map((fact) => (
+        <li>{fact[lang]}</li>
+      ))}
+    </ul>
   </div>
   <nav aria-label={t["links.label"]}>
     <ul class="identity">
@@ -54,15 +80,13 @@ const identities = [
         </li>
       ))}
     </ul>
-    <p class="cv">
-      {links.cv ? (
+    {links.cv && (
+      <p class="cv">
         <a href={links.cv} type="application/pdf" download>
           {t["links.cv"]}
         </a>
-      ) : (
-        <span class="soon">{t["links.cvSoon"]}</span>
-      )}
-    </p>
+      </p>
+    )}
   </nav>
 </header>
 
@@ -95,7 +119,33 @@ const identities = [
     font-weight: 600;
   }
 
+  /* Where the line is now, in the pipeline's own status vocabulary. */
+  .now {
+    margin-top: var(--space-2);
+    font-weight: 600;
+  }
+
+  .now-status {
+    margin-right: var(--space-2);
+    color: var(--running);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
   .location {
+    color: var(--ink-muted);
+  }
+
+  .key-facts {
+    display: grid;
+    gap: var(--space-1);
+    max-width: var(--measure);
+    margin-top: var(--space-4);
+    padding-left: 1.1rem;
+  }
+
+  .key-facts li::marker {
     color: var(--ink-muted);
   }
 
@@ -151,14 +201,9 @@ const identities = [
     font-weight: 700;
   }
 
-  .cv a,
-  .soon {
+  .cv a {
     display: inline-block;
     padding-block: var(--space-2);
-  }
-
-  .soon {
-    color: var(--ink-muted);
   }
 
   @media (min-width: 48rem) {

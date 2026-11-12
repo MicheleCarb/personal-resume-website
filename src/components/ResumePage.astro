@@ -20,6 +20,8 @@ if (!entry) throw new Error("Profile entry 'michele' is missing");
 const profile = entry.data;
 const description = `${profile.headline}. ${profile.location[lang]}.`;
 const stages = await getStages();
+// getStages() guarantees exactly one running stage.
+const current = stages.find((stage) => stage.data.status === "running")!.data;
 ---
 
 <Base
@@ -30,7 +32,7 @@ const stages = await getStages();
   imageAlt={`${profile.name}, ${profile.headline}: linkedin.com/in/${profile.handle}, github.com/${profile.handle}, ${profile.handle}.one`}
 >
   <LanguageSwitch lang={lang} />
-  <Header lang={lang} profile={profile} />
+  <Header lang={lang} profile={profile} current={current} />
   <main id="main" tabindex="-1">
     <section class="intro" aria-labelledby="intro-heading" data-hero-intro>
       <h2 id="intro-heading" class="visually-hidden">

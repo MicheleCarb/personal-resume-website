@@ -4,10 +4,17 @@ michele:
   name: Michele Carbone
   # Shared by LinkedIn, GitHub and the website; highlighted in the masthead.
   handle: michelecarb
-  headline: Software Engineer · DevOps
+  headline: Software Engineer · Cloud & DevOps · Scrum Master
   location:
     en: Currently based in Nice, France
     it: Attualmente a Nizza, Francia
+  # Shown in the masthead under the current role. Each line is an existing,
+  # approved highlight from stages/amadeus.yaml, cut at its first clause.
+  keyFacts:
+    - en: Decreased cloud cost by more than 200k€/year (over 20%).
+      it: Ho ridotto i costi cloud di oltre 200k€/anno (oltre il 20%).
+    - en: Supported the cloud migration of high-throughput backend systems processing 150k TPS in production.
+      it: Ho supportato la migrazione al cloud di sistemi backend ad alto throughput che elaborano 150k TPS in produzione.
   intro:
     en: >-
       Software engineer currently based in Nice, France, building and operating
@@ -25,7 +32,7 @@ michele:
     website: https://michelecarb.one
     # TODO(cv): add the PDF as public/cv/michele-carbone-cv.pdf, then set
     #   cv: /cv/michele-carbone-cv.pdf
-    # Until then the masthead shows "CV (PDF): coming soon".
+    # Until then the masthead shows no CV line.
   # Sources: CV-AI.pdf skills section; the two agentic groups replace the CV's
   # "AI" line (owner, 2026-10-28).
   skills:
