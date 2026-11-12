@@ -4,7 +4,8 @@
 // Scrolling drives one continuous progress value, p (0 = first station,
 // 1 = second, ...); every card's position, window height, scale, opacity and
 // accent are interpolated from its distance to p, so nothing ever switches
-// abruptly. Elsewhere (phones, reduced motion, no JavaScript) nothing changes.
+// abruptly. Elsewhere (phones, short windows, reduced motion, print, no
+// JavaScript) the page is the standard static pipeline.
 //
 // The scroll schedule is measured once (and on resize): each card holds for
 // a short dwell plus whatever scroll it needs to read content taller than its
@@ -17,8 +18,10 @@ const list = stage?.querySelector<HTMLElement>(".pipeline");
 const page = section?.parentElement;
 
 if (section && track && stage && list && page) {
+  // Below 40rem of height the active card's window falls under a few lines
+  // of text, so short windows keep the static pipeline.
   const query = matchMedia(
-    "(min-width: 64rem) and (prefers-reduced-motion: no-preference)",
+    "screen and (min-width: 64rem) and (min-height: 40rem) and (prefers-reduced-motion: no-preference)",
   );
   const items = [...list.querySelectorAll<HTMLElement>(":scope > li")];
   const pending = items[0];
@@ -54,7 +57,6 @@ if (section && track && stage && list && page) {
     cards.forEach((li) => (li.style.transform = ""));
     bodies.forEach((b) => (b.style.height = ""));
     contents.forEach((c) => (c.style.transform = ""));
-    details.forEach((all) => all.forEach((d) => (d.open = true)));
 
     pendingHeight = pending.offsetHeight;
     const available = innerHeight - 2 * top;
@@ -185,7 +187,8 @@ if (section && track && stage && list && page) {
   };
 
   // Re-measure whenever a card's content changes size (web font or logo
-  // arriving, viewport width changing), so windows always fit their content.
+  // arriving, viewport width changing, a Details opened or closed), so
+  // windows always fit their content.
   const observer = new ResizeObserver(() => {
     if (!section.classList.contains("is-scrolly")) return;
     cancelAnimationFrame(frame);
@@ -195,8 +198,14 @@ if (section && track && stage && list && page) {
     });
   });
 
+  let active = false;
+
   const enable = () => {
+    active = true;
     section.classList.add("is-scrolly");
+    // The active card shows all of its content, so every Details starts
+    // open; each one can still be closed and reopened.
+    details.forEach((all) => all.forEach((d) => (d.open = true)));
     measure();
     render();
     contents.forEach((c) => observer.observe(c));
@@ -206,6 +215,7 @@ if (section && track && stage && list && page) {
   };
 
   const disable = () => {
+    active = false;
     section.classList.remove("is-scrolly");
     observer.disconnect();
     removeEventListener("scroll", onScroll);
@@ -229,7 +239,27 @@ if (section && track && stage && list && page) {
     page.style.removeProperty("--scrolly-pull");
   };
 
-  const apply = () => (query.matches ? enable() : disable());
+  let printing = false;
+  const apply = () => {
+    const wanted = query.matches && !printing;
+    if (wanted !== active) (wanted ? enable : disable)();
+  };
   query.addEventListener("change", apply);
   apply();
+
+  // Paper gets the static pipeline with every Details open; the screen
+  // state comes back afterwards.
+  const everyDetails = details.flat();
+  let openBeforePrint: boolean[] = [];
+  addEventListener("beforeprint", () => {
+    openBeforePrint = everyDetails.map((d) => d.open);
+    printing = true;
+    apply();
+    everyDetails.forEach((d) => (d.open = true));
+  });
+  addEventListener("afterprint", () => {
+    printing = false;
+    apply();
+    everyDetails.forEach((d, i) => (d.open = openBeforePrint[i]));
+  });
 }

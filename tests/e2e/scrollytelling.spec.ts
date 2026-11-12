@@ -176,10 +176,56 @@ test.describe("pinned scrollytelling on desktop", () => {
       })
       .toBeGreaterThan(0.99);
   });
+
+  test("lets a Details be closed and reopened while pinned", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await scrollToY(page, await findFullyActive(page, "Amadeus IT Group"));
+    const details = page.locator(".pipeline details");
+    const summary = details.first().locator("summary");
+    const highlight = details.first().getByText(/AI knowledge assistants/);
+    await expect(details).toHaveCount(5);
+    await expect(page.locator(".pipeline details[open]")).toHaveCount(5);
+
+    await summary.click();
+    await expect(details.first()).not.toHaveAttribute("open");
+    await expect(highlight).toBeHidden();
+    await expect(page.locator(".pipeline details[open]")).toHaveCount(4);
+
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(details.first()).toHaveAttribute("open", "");
+    await expect(highlight).toBeVisible();
+    expect(await isPinned(page)).toBe(true);
+  });
+
+  test("prints the static pipeline with every Details open, then pins again", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    expect(await isPinned(page)).toBe(true);
+
+    await page.emulateMedia({ media: "print" });
+    await page.evaluate(() => dispatchEvent(new Event("beforeprint")));
+    expect(await isPinned(page)).toBe(false);
+    await expect(page.locator(".pipeline details[open]")).toHaveCount(5);
+    const clipped = await page
+      .locator(".pipeline .stage-body")
+      .evaluateAll((bodies) =>
+        bodies.some((body) => body.scrollHeight > body.clientHeight + 1),
+      );
+    expect(clipped, "no card clips its content on paper").toBe(false);
+
+    await page.evaluate(() => dispatchEvent(new Event("afterprint")));
+    await page.emulateMedia({ media: "screen" });
+    await expect.poll(() => isPinned(page)).toBe(true);
+  });
 });
 
 for (const [name, setup] of [
   ["phones", { viewport: { width: 360, height: 800 } }],
+  ["wide but short windows", { viewport: { width: 1280, height: 600 } }],
   ["reduced motion", { viewport: desktop, reducedMotion: "reduce" as const }],
 ] as const) {
   test(`keeps the static page on ${name}`, async ({ browser }) => {
