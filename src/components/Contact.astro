@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { ui, type Lang } from "../i18n/ui";
+import IdentityLinks from "./IdentityLinks.astro";
+
+interface Props {
+  lang: Lang;
+  profile: CollectionEntry<"profile">["data"];
+}
+
+const { lang, profile } = Astro.props;
+const t = ui[lang];
+---
+
+<!-- The way out at the end of the page. Contact goes through LinkedIn
+     (PRODUCT.md); the other profiles stay in the masthead. -->
+<section class="contact" aria-labelledby="contact-heading">
+  <h2 id="contact-heading">{t["contact.heading"]}</h2>
+  <IdentityLinks lang={lang} profile={profile} services={["linkedin"]} />
+</section>
+
+<style>
+  .contact {
+    margin-top: var(--space-8);
+  }
+
+  h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-xl);
+    font-weight: 800;
+  }
+</style>

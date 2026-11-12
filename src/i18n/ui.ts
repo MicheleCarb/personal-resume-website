@@ -29,6 +29,7 @@ const en = {
   "credentials.heading": "Certifications & Languages",
   "credentials.certifications": "Certifications",
   "credentials.languages": "Languages",
+  "contact.heading": "Contact",
 };
 
 type UIStrings = Record<keyof typeof en, string>;
@@ -59,6 +60,7 @@ const it: UIStrings = {
   "credentials.heading": "Certificazioni e lingue",
   "credentials.certifications": "Certificazioni",
   "credentials.languages": "Lingue",
+  "contact.heading": "Contatti",
 };
 
 export const ui: Record<Lang, UIStrings> = { en, it };

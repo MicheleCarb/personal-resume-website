@@ -1,0 +1,113 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { ui, type Lang } from "../i18n/ui";
+
+type Service = "linkedin" | "github" | "website";
+
+interface Props {
+  lang: Lang;
+  profile: CollectionEntry<"profile">["data"];
+  services: Service[];
+}
+
+const { lang, profile, services } = Astro.props;
+const t = ui[lang];
+const { handle, links } = profile;
+
+// Show each address as written ("linkedin.com/in/michelecarb"), split around
+// the shared handle so the handles line up in one column.
+const identities = services.map((service) => {
+  const href = links[service];
+  const shown = href.replace(/^https?:\/\/(www\.)?/, "").toLowerCase();
+  const at = shown.indexOf(handle);
+  if (at === -1) throw new Error(`${href} does not contain "${handle}"`);
+  return {
+    label: t[`links.${service}`],
+    href,
+    prefix: shown.slice(0, at),
+    suffix: shown.slice(at + handle.length),
+  };
+});
+---
+
+<ul class="identity">
+  {identities.map(({ label, href, prefix, suffix }) => (
+    <li>
+      <a
+        href={href}
+        rel="me"
+        aria-label={`${label}: ${prefix}${handle}${suffix}`}
+      >
+        <span class="prefix">{prefix}</span>
+        <span class="handle">{handle}</span>
+        <span class="suffix">{suffix}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+{links.cv && (
+  <p class="cv">
+    <a href={links.cv} type="application/pdf" download>
+      {t["links.cv"]}
+    </a>
+  </p>
+)}
+
+<style>
+  /* Rows sharing one grid, so every handle sits in the same column. */
+  .identity {
+    display: grid;
+    grid-template-columns: max-content max-content max-content;
+    justify-content: start;
+    row-gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-lg);
+    line-height: 1.3;
+  }
+
+  .identity li,
+  .identity a {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+  }
+
+  .identity a {
+    padding-block: var(--space-1);
+    text-decoration: none;
+  }
+
+  .prefix {
+    color: var(--ink-muted);
+    text-align: right;
+  }
+
+  .handle {
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.2em;
+  }
+
+  .suffix {
+    font-weight: 800;
+  }
+
+  .identity a:hover .handle {
+    color: var(--running);
+    text-decoration-color: currentColor;
+  }
+
+  .cv {
+    margin-top: var(--space-3);
+    font-weight: 700;
+  }
+
+  .cv a {
+    display: inline-block;
+    padding-block: var(--space-2);
+  }
+</style>

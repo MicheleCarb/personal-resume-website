@@ -8,6 +8,7 @@ import LanguageSwitch from "./LanguageSwitch.astro";
 import Pipeline from "./Pipeline.astro";
 import Skills from "./Skills.astro";
 import Credentials from "./Credentials.astro";
+import Contact from "./Contact.astro";
 
 interface Props {
   lang: Lang;
@@ -47,6 +48,7 @@ const current = stages.find((stage) => stage.data.status === "running")!.data;
       certifications={profile.certifications}
       languages={profile.languages}
     />
+    <Contact lang={lang} profile={profile} />
   </main>
 </Base>
 

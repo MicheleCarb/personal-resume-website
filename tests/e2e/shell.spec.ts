@@ -15,6 +15,7 @@ const pages = [
     masthead: {
       now: "Amadeus IT Group · Consultant via Groupe SII · since Feb 2023",
       factsLabel: "Key results",
+      contact: "Contact",
       facts: [/more than 200k€\/year \(over 20%\)/, /150k TPS/],
     },
   },
@@ -30,6 +31,7 @@ const pages = [
     masthead: {
       now: "Amadeus IT Group · Consulente tramite Groupe SII · da feb 2023",
       factsLabel: "Risultati principali",
+      contact: "Contatti",
       facts: [/oltre 200k€\/anno \(oltre il 20%\)/, /150k TPS/],
     },
   },
@@ -71,6 +73,19 @@ for (const { path, other, links, masthead } of pages) {
       ).toHaveAttribute("href", "https://michelecarb.one");
       // TODO(cv): once the PDF exists, expect a download link instead.
       await expect(page.getByText(/CV/)).toHaveCount(0);
+    });
+
+    test("ends with a way out to LinkedIn", async ({ page }) => {
+      const contact = page.getByRole("region", { name: masthead.contact });
+      await expect(contact.getByRole("link")).toHaveCount(1);
+      await expect(
+        contact.getByRole("link", { name: links.linkedin }),
+      ).toHaveAttribute("href", "https://www.linkedin.com/in/michelecarb");
+      // The last section of the page, after everything else.
+      await expect(page.locator("main > section").last()).toHaveAttribute(
+        "aria-labelledby",
+        "contact-heading",
+      );
     });
 
     test("switches to the other language", async ({ page }) => {
