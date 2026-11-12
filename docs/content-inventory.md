@@ -16,10 +16,11 @@ Sources:
 | Website | https://michelecarb.one (custom domain for this site) | Owner |
 | LinkedIn | https://www.linkedin.com/in/michelecarb | CV |
 | GitHub | https://github.com/MicheleCarb | CV, repo remote |
-| Email | Not shown on the site; contact via LinkedIn (email stays inside the PDF) | Owner |
+| Email | Not shown on the site and not stored in the repository; it will appear only inside the CV PDF. Contact via LinkedIn | Owner (2026-11-12, to limit spam) |
 | Phone | Excluded | Owner |
 | Location | Currently based in Nice, France (relocation not mentioned for now) | Owner |
-| Headline | Software Engineer · DevOps | Owner |
+| Headline | Software Engineer · Cloud & DevOps · Scrum Master | Owner (2026-11-12; was "Software Engineer · DevOps") |
+| Masthead key results | The 200k€/year saving and the 150k TPS migration, each cut from its approved highlight | Owner (2026-11-12) |
 | Short introduction | Software engineer currently based in Nice, France, building and operating high-throughput backend systems in C++ and Java. I work across cloud infrastructure, CI/CD and observability, and bring hands-on Agile experience as a certified Scrum Master and Product Owner. | Draft A, owner-approved with edits |
 | Photo | None for now | Owner |
 | Spoken languages | Italian (native), English (fluent), French (B2) | CV |
@@ -114,8 +115,12 @@ Sources:
 
 - **Throughput:** state 150k TPS; the "over one million TPS" line is dropped.
 - **Disclosure:** internal application names are generalized; the more-than-200k€/year (over 20%) saving and the 150k TPS figure are published.
-- **Email:** not on the site; contact through LinkedIn.
+- **Email:** not on the site and not in the repository (owner, 2026-11-12, after weighing spam); it will be in the CV PDF only. Contact through LinkedIn. A forwarding address on the michelecarb.one domain remains an option for later.
 - **Structure:** Amadeus is one stage with three role steps; stages are ordered newest first; the next stage reads "Pipeline continues".
+- **Agile roles at Amadeus (2026-11-12):** Scrum Master from May 2024; Scrum Master and Product Owner from Dec 2024 to Dec 2025, for a team of 15 across two applications, setting priorities and taking decisions; Scrum Master only since Dec 2025, with a smaller team and the focus rebalanced on technical work. The step title "Team Contributor" becomes "Scrum Master", and the "Led a team of 15" line is replaced by two lines starting with a verb ("Served for one year…", "Continued as Scrum Master from Dec 2025…"), approved by the owner in English and Italian. The current team size is not published. The SAFe Product Owner/Product Manager certification was obtained after the Product Owner role ended.
+- **Closing links (2026-11-12):** the page ends with a "Contact" / "Contatti" section with LinkedIn only (and the CV once it exists); GitHub stays in the masthead as a profile. This replaces the earlier "no footer" decision. The Italian heading was approved by the owner.
+- **Skills (2026-11-12):** groups reordered by the positioning (Cloud & Platforms, DevOps, Programming, Tools, Agile, then AI); the two agentic groups are merged into "AI & agentic development" / "AI e sviluppo agentico" with the same items in the same order. Group name approved by the owner.
+- **CV placeholder (2026-11-12):** the masthead shows no CV line until the PDF exists.
 - **Italian:** Claude drafts translations from the English; the owner reviews and approves before publishing.
 
 ## Still open

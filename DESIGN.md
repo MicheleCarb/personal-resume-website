@@ -166,7 +166,7 @@ Circles for station markers, a straight line with rounded corners only where the
 
 ### Station markers
 
-1.75rem circles centred on the line. Success: green fill, ink border, authored SVG check in the ground colour. Running: ground fill on a pale running-blue ring, with a running-blue arc spinning around it (1.1s linear, like a build in progress); under reduced motion the arc becomes a complete static ring. Pending: ground fill, dashed pending-line border. Markers are `aria-hidden`; the status is always in text.
+1.75rem circles centred on the line. Success: green fill, ink border, authored SVG check in the ground colour. Running: ground fill on a pale running-blue ring, with a running-blue arc spinning around it (1.1s linear, like a build in progress). The arc turns four times and then closes into a complete ring (under 5s in all, so nothing moves indefinitely); `src/scripts/running-marker.ts` holds the spin until the marker is on screen and replays it each time it comes back into view. Without JavaScript it plays once on load; under reduced motion the ring is complete and static from the start. Pending: ground fill, dashed pending-line border. Markers are `aria-hidden`; the status is always in text.
 
 ### Parallel branch
 
@@ -174,7 +174,7 @@ Supported by the content model (`parallelWith`) but unused in the current conten
 
 ### Identity links
 
-The masthead lists LinkedIn, GitHub and the website as their real addresses, split around the shared handle. A three-column subgrid aligns every `michelecarb` in one column: prefix right-aligned in ink-muted, handle in 800 ink with a rule-coloured underline (running blue on hover), suffix in 800 ink. Each link's accessible name is "<Service>: <address>". From 48rem the block sits to the right of the name; the CV link follows it.
+The masthead lists LinkedIn, GitHub and the website as their real addresses, split around the shared handle. A three-column subgrid aligns every `michelecarb` in one column: prefix right-aligned in ink-muted, handle in 800 ink with a rule-coloured underline (running blue on hover), suffix in 800 ink. Each link's accessible name is "<Service>: <address>". From 48rem the block sits to the right of the name; the CV link follows it. The same component (`IdentityLinks.astro`) closes the page in a "Contact" section with LinkedIn only (contact goes through LinkedIn; GitHub is a profile, not a contact channel, and stays in the masthead). The CV joins it once it exists, so the way out is also at the end of a long scroll.
 
 ### Details
 
@@ -186,38 +186,41 @@ Ink text, 0.1em underline at 0.22em offset, running blue on hover, 3px running-b
 
 ### Skills and credentials
 
-After the pipeline, two quiet sections in the same type system: a definition list of skill groups (group in 700 ink, items comma-separated in ink-muted) in an auto-fill grid of 18rem minimum columns, then certifications and spoken languages as two plain lists side by side. No bars, percentages, ratings or badges.
+After the pipeline, two quiet sections in the same type system: a definition list of six skill groups ordered by the positioning (cloud and DevOps first, AI last; group in 700 ink, items comma-separated in ink-muted) in an auto-fill grid of 18rem minimum columns, then certifications and spoken languages as two plain lists side by side. No bars, percentages, ratings or badges.
 
 ### Motion
 
 - **Running spinner:** described under Station markers.
 - **Section focus** (CSS `view-timeline` per station, no JavaScript): a band from 40% to 60% of the viewport (`view-timeline-inset: 40% 40%`). A station is fully in focus from a quarter of the way into its entry (its heading is centred) until a quarter into its exit, and has fully handed over by 60% of its exit, so exactly one station is in focus at a time. In focus, the marker scales to 1.3 and a 0.2rem ring in the station's status colour fades and scales in around it (`.stage::after`). Nothing is ever dimmed; the pending station never takes focus.
 - Verify scroll-driven effects against a production build (`npm run build && npm run preview`): the dev server's hot reload does not reliably apply edits to these scoped styles.
-- **Chevron flow:** the chevrons travel upward with page scroll (`mask-position` on `scroll(root)`).
-- Opacity and transform only (plus the chevron mask position). Static under reduced motion and in browsers without scroll timelines.
+- **Chevrons:** static. They point upward and carry the direction on their own; they no longer travel with scroll (removed 2026-11-12, the one effect that repainted on every scroll).
+- Opacity and transform only. Static under reduced motion and in browsers without scroll timelines.
 - Write animation longhands, never the `animation` shorthand next to `animation-timeline`: the CSS minifier folds them into a shorthand that browsers reject.
 
 ### Pinned scrollytelling (desktop)
 
-`src/scripts/scrollytelling.ts` adds `.is-scrolly` to the pipeline section when `(min-width: 64rem) and (prefers-reduced-motion: no-preference)` matches.
+`src/scripts/scrollytelling.ts` adds `.is-scrolly` to the pipeline section when `screen and (min-width: 64rem) and (min-height: 40rem) and (prefers-reduced-motion: no-preference)` matches. Shorter windows keep the static pipeline: below 40rem the active card's window falls under a few lines of text.
+
+- **Details:** every Details starts open while pinned, and each can be closed and reopened; the cards re-measure when one changes size.
+- **Print:** on `beforeprint` (and whenever the medium is not `screen`) the pinning is removed and every Details is opened, so paper gets the whole static pipeline; the screen state is restored on `afterprint`.
 
 - **Stage:** sticky at a 16px offset, sized for its final state (last card open), so the pin releases exactly where that layout ends. The stations are absolutely positioned inside it; the pending row stays at the top.
 - **Schedule:** measured once and on resize. Each card holds for 15vh plus any scroll needed to read content taller than its window; consecutive cards are joined by a 35vh transition with smoothstep easing. Progress `p` (0, 1, 2) is a pure function of scroll position.
 - **Per card, from its distance to `p`:** weight `w = 1 - |i - p|` drives the window height (compact header to full content, capped to the viewport), the accent (border and 6% tint mixed toward the status colour), the marker scale (1 + 0.3w) and the focus ring. Previous cards scale to 0.97 and fade to 0.78; upcoming cards fade at most to 0.89. While a card holds, its content moves up inside the window to reveal overflow, easing back to its header as it collapses.
 - **Card frame:** 1px border mixed from `--rule` toward the status colour, 0.5rem radius, bottom-edge fade mask so a compact window never shows a sliver of the next line. Owner-approved exception to "no cards".
-- **Line:** one continuous segment on the list (`--line-top`, `--line-height`) from the first card's marker to the last, with the chevron flow; the per-station segments are hidden.
+- **Line:** one continuous segment on the list (`--line-top`, `--line-height`) from the first card's marker to the last, with the same static chevrons; the per-station segments are hidden.
 - **Following content:** offset by `--scrolly-pull` (on the page wrapper) so it always sits right under the last card; it reaches zero when the pin releases.
 - **Access:** nothing is unmounted; content outside a window stays in the page. Focus entering a card scrolls to where it is fully open.
 
 ### Hero sequence (desktop)
 
-One shared progress: every hero animation uses `animation-timeline: scroll(root)` over `0 → --hero-end` (200px, set on `.masthead`), so they move as one sequence and reverse cleanly. `src/scripts/name-split.ts` only measures, with the animation class removed so transforms never skew the numbers.
+One timed sequence, started by the first scroll rather than tied to the scroll position, so it can never rest half-way. `src/scripts/name-split.ts` measures (at rest, with transitions off, so transforms never skew the numbers) and switches state classes on `.masthead`: `is-splitting` (built), `is-landed` (contact block at its destination), `is-flying` (copies play), `is-instant` (no transition, while measuring or when the page loads already scrolled). The sequence starts once the page has scrolled past 24px and resets when it is back within 4px of the top; the gap prevents replays near the top. It needs no scroll timelines, so it also runs in Firefox.
 
 - **Layout:** from 48rem the intro is `min(32rem, 100% - 22rem)` wide, opening a right-hand column beside it.
-- **Contact block:** descends by `--links-dy` (whole pixels; centred beside the intro, or 0 when the intro leaves no room) with a mid-way scale dip to 0.97 and an ease-out. Transform only, so the links stay readable and clickable and nothing reflows.
-- **Name copies:** `aria-hidden`, `pointer-events: none`. "Michele Carb" ×3 and "one" are measured with DOM Ranges; each targets its handle's final (descended) position. One straight diagonal per copy: `translate` runs from the name to the target over the whole range (ease-out), anchored at the copy's right edge (`transform-origin: 100% 0`, offsets measured between right edges, target text right-aligned), so the path starts at the end of the word, as an arrow drawn from the name. `scale` is keyed separately and reaches handle size by 15%, so the word clears the headline and location instead of sweeping across them. Copies stay invisible until 10% (clear of the name) and fade in by 14%. Staggered by 20px of scroll, the website row first. "one" is running blue from departure. Each copy switches from name style to blue lowercase handle style sequentially (out 38–46%, in 46–54%) and fades out on landing. Copies brush the end of their row's prefix as they slide in (the prefix sits between the name and the handle on every row, so a straight path must pass it).
-- **Landing zone:** while flying, `.is-splitting` fades the real handles, suffix and CV line to 0 and dims prefixes to 0.8, restoring all at the end.
-- Active from 48rem with motion allowed and scroll-timeline support; otherwise nothing is built and the links stay top right.
+- **Contact block:** descends by `--links-dy` (whole pixels; centred beside the intro, or 0 when the intro leaves no room) as a 720ms `transform` transition with an exponential ease-out, and climbs back in 360ms. A transition, so reversing mid-way continues from the block's current position. Transform only, so the links stay readable and clickable and nothing reflows.
+- **Name copies:** `aria-hidden`, `pointer-events: none`. "Michele Carb" ×3 and "one" are measured with DOM Ranges; each targets its handle's final (descended) position. One straight diagonal per copy: `translate` runs from the name to the target over the whole range (ease-out), anchored at the copy's right edge (`transform-origin: 100% 0`, offsets measured between right edges, target text right-aligned), so the path starts at the end of the word, as an arrow drawn from the name. `scale` is keyed separately and reaches handle size by 15%, so the word clears the headline and location instead of sweeping across them. Copies stay invisible until 10% (clear of the name) and fade in by 14%. Each flight lasts 720ms, staggered by 60ms, the website row first. "one" is running blue from departure. Each copy switches from name style to blue lowercase handle style sequentially (out 38–46%, in 46–54%) and dissolves over the real handle from 80% as it lands. Copies brush the end of their row's prefix as they slide in (the prefix sits between the name and the handle on every row, so a straight path must pass it).
+- **Landing zone:** the real prefixes, handles and suffixes stay at full opacity throughout; nothing is hidden or dimmed to make room.
+- Active from 48rem with motion allowed; otherwise nothing is built and the links stay top right. When the page loads already scrolled, the block is placed at its destination without a flight. In print the block is never moved and the copies are not drawn.
 
 ### Details default
 
@@ -236,5 +239,5 @@ Organization logos in `public/logos/` (96×96 PNG, shown at 2.25rem on a white t
 - **Do** add stages by editing content files; the line, order and loop are derived.
 - **Don't** wrap stages in cards, add badges or pills, or put a label above a heading.
 - **Don't** introduce a second typeface or monospace for "technical" flavour.
-- **Don't** add motion beyond the running spinner and the pipeline's scroll-driven effects, and never without a reduced-motion fallback.
+- **Don't** add motion beyond the bounded running spinner, the section focus, the pinned cards and the hero sequence, and never without a reduced-motion fallback.
 - **Do** regenerate raster assets with `npm run images` rather than editing them.
