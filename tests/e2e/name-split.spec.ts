@@ -3,6 +3,8 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const desktop = { width: 1280, height: 800 };
+// Any scroll past the start threshold plays the whole sequence.
+const firstScroll = 40;
 
 const scrollToY = (page: Page, top: number) =>
   page.evaluate(
@@ -14,12 +16,47 @@ const scrollToY = (page: Page, top: number) =>
     top,
   );
 
+// The hero's own animations and transitions (not the running spinner).
+// Freezes the sequence at a moment in time, in milliseconds.
+const seek = (page: Page, time: number) =>
+  page.evaluate(
+    (t) =>
+      new Promise((resolve) => {
+        for (const animation of document.getAnimations()) {
+          const target = (animation.effect as KeyframeEffect).target;
+          if (!target?.closest(".masthead")) continue;
+          animation.pause();
+          animation.currentTime = t;
+        }
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      }),
+    time,
+  );
+
+// Lets the sequence run to its end.
+const settle = (page: Page) =>
+  page.evaluate(async () => {
+    const hero = document
+      .getAnimations()
+      .filter((animation) =>
+        (animation.effect as KeyframeEffect).target?.closest(".masthead"),
+      );
+    hero.forEach((animation) => animation.play());
+    await Promise.all(hero.map((animation) => animation.finished));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  });
+
 const opacities = (page: Page, selector: string) =>
   page
     .locator(selector)
     .evaluateAll((els) =>
       els.map((el) => Number(getComputedStyle(el).opacity)),
     );
+
+const linksTop = (page: Page) =>
+  page
+    .locator(".masthead nav")
+    .evaluate((el) => el.getBoundingClientRect().top + scrollY);
 
 test.describe("name split on desktop", () => {
   test.use({ viewport: desktop });
@@ -39,7 +76,7 @@ test.describe("name split on desktop", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Michele Carbone",
     );
-    await expect(page.locator(".identity .handle")).toHaveText([
+    await expect(page.locator(".masthead .identity .handle")).toHaveText([
       "michelecarb",
       "michelecarb",
       "michelecarb",
@@ -52,32 +89,82 @@ test.describe("name split on desktop", () => {
     ]);
   });
 
-  test("shows the links at rest and after the flight, clearing them in between", async ({
+  test("keeps the real links fully visible at rest, in flight and after landing", async ({
     page,
   }) => {
-    expect(await opacities(page, ".identity .handle")).toEqual([1, 1, 1]);
-    await scrollToY(page, 80);
-    expect(await opacities(page, ".identity .handle")).toEqual([0, 0, 0]);
-    await scrollToY(page, 200);
-    expect(await opacities(page, ".identity .handle")).toEqual([1, 1, 1]);
+    const linkText = ".masthead .identity :is(.prefix, .handle, .suffix)";
+    const allVisible = async () =>
+      expect(new Set(await opacities(page, linkText))).toEqual(new Set([1]));
+
+    await allVisible();
+    expect(await opacities(page, ".split-piece")).toEqual([0, 0, 0, 0]);
+
+    await scrollToY(page, firstScroll);
+    for (const time of [150, 300, 450, 600, 750]) {
+      await seek(page, time);
+      await allVisible();
+    }
+    await seek(page, 400);
+    expect(Math.max(...(await opacities(page, ".split-piece")))).toBe(1);
+
+    await settle(page);
+    await allVisible();
     expect(await opacities(page, ".split-piece")).toEqual([0, 0, 0, 0]);
   });
 
-  test("lands each copy exactly on its handle", async ({ page }) => {
-    await scrollToY(page, 200);
+  test("runs to the end when scrolling stops right after it starts", async ({
+    page,
+  }) => {
+    const before = await linksTop(page);
+    await scrollToY(page, firstScroll);
+    await settle(page);
+
+    const descent = await page
+      .locator(".masthead")
+      .evaluate((el) => parseFloat(el.style.getPropertyValue("--links-dy")));
+    expect(descent).toBeGreaterThan(0);
+    expect(await linksTop(page)).toBeCloseTo(before + descent, 0);
+
+    // Each copy has landed exactly on its handle.
     const landed = await page.evaluate(() => {
       const box = (el: Element) => el.getBoundingClientRect();
-      const handles = [...document.querySelectorAll(".identity .handle")];
+      const handles = [
+        ...document.querySelectorAll(".masthead .identity .handle"),
+      ];
       const pieces = [...document.querySelectorAll(".split-to")];
       return handles.map((handle, i) => [
         Math.abs(box(handle).left - box(pieces[i]).left),
+        Math.abs(box(handle).top - box(pieces[i]).top),
         Math.abs(box(handle).width - box(pieces[i]).width),
       ]);
     });
-    for (const [dx, dw] of landed) {
-      expect(dx).toBeLessThan(2);
-      expect(dw).toBeLessThan(2);
+    for (const offsets of landed) {
+      for (const offset of offsets) expect(offset).toBeLessThan(2);
     }
+  });
+
+  test("does not start on a tiny scroll, and resets back at the top", async ({
+    page,
+  }) => {
+    const masthead = page.locator(".masthead");
+    const before = await linksTop(page);
+
+    await scrollToY(page, 10);
+    await expect(masthead).not.toHaveClass(/is-landed/);
+
+    await scrollToY(page, firstScroll);
+    await expect(masthead).toHaveClass(/is-landed/);
+    await settle(page);
+
+    // Scrolling back up short of the top keeps the settled state.
+    await scrollToY(page, 10);
+    await expect(masthead).toHaveClass(/is-landed/);
+
+    await scrollToY(page, 0);
+    await expect(masthead).not.toHaveClass(/is-landed|is-flying/);
+    await settle(page);
+    expect(await linksTop(page)).toBeCloseTo(before, 0);
+    expect(await opacities(page, ".split-piece")).toEqual([0, 0, 0, 0]);
   });
 
   test("moves the contact block beside the intro without touching it or the pipeline", async ({
@@ -90,8 +177,9 @@ test.describe("name split on desktop", () => {
             .top + scrollY,
       );
     const before = await pipelineTop();
-    for (let y = 0; y <= 220; y += 20) {
-      await scrollToY(page, y);
+    await scrollToY(page, firstScroll);
+    for (let time = 0; time <= 720; time += 60) {
+      await seek(page, time);
       const overlap = await page.evaluate(() => {
         const links = document
           .querySelector(".masthead nav")!
@@ -106,8 +194,9 @@ test.describe("name split on desktop", () => {
           links.bottom > intro.top
         );
       });
-      expect(overlap, `links overlap the intro at ${y}px`).toBe(false);
+      expect(overlap, `links overlap the intro at ${time}ms`).toBe(false);
     }
+    await settle(page);
     const settled = await page.evaluate(() => {
       const links = document
         .querySelector(".masthead nav")!
@@ -122,9 +211,10 @@ test.describe("name split on desktop", () => {
   });
 
   test("keeps the links clickable while they move", async ({ page }) => {
-    await scrollToY(page, 100);
+    await scrollToY(page, firstScroll);
+    await seek(page, 200);
     const hit = await page.evaluate(() => {
-      const link = document.querySelector(".identity a")!;
+      const link = document.querySelector(".masthead .identity a")!;
       const r = link.getBoundingClientRect();
       return (
         document
@@ -144,10 +234,13 @@ test.describe("name split on desktop", () => {
           return [r.right, r.top + scrollY];
         }),
       );
+    await scrollToY(page, firstScroll);
+    await seek(page, 0);
     const start = await anchors();
     const samples: number[][][] = [];
-    for (let y = 0; y <= 200; y += 10) {
-      await scrollToY(page, y);
+    // 720ms of flight plus the longest stagger.
+    for (let time = 0; time <= 900; time += 45) {
+      await seek(page, time);
       samples.push(await anchors());
     }
     start.forEach(([x0, y0], i) => {
@@ -163,10 +256,31 @@ test.describe("name split on desktop", () => {
     });
   });
 
+  test("prints the links in their place, not where the sequence moved them", async ({
+    page,
+  }) => {
+    await scrollToY(page, firstScroll);
+    await settle(page);
+    await page.emulateMedia({ media: "print" });
+    const nav = page.locator(".masthead nav");
+    expect(await nav.evaluate((el) => getComputedStyle(el).transform)).toBe(
+      "none",
+    );
+    await expect(page.locator(".name-split")).toBeHidden();
+    // Inside the masthead, above its rule, clear of the intro.
+    const inside = await page.evaluate(() => {
+      const box = (selector: string) =>
+        document.querySelector(selector)!.getBoundingClientRect();
+      return box(".masthead nav").bottom <= box(".masthead").bottom;
+    });
+    expect(inside).toBe(true);
+  });
+
   test("stays accessible mid-flight", async ({ page }) => {
-    await scrollToY(page, 80);
+    await scrollToY(page, firstScroll);
+    await seek(page, 400);
     // The flying copies are aria-hidden, decorative and on screen only
-    // while they fade; the real text around them is still checked.
+    // while they fly; the real text around them is still checked.
     const results = await new AxeBuilder({ page })
       .exclude(".name-split")
       .analyze();

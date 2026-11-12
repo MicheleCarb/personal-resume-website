@@ -96,9 +96,6 @@ const identities = [
 
 <style>
   .masthead {
-    /* Shared hero progress: every hero animation runs over this range of
-       root scroll, so they move as one sequence in both directions. */
-    --hero-end: 200px;
     position: relative;
     display: grid;
     gap: var(--space-5);
@@ -213,10 +210,11 @@ const identities = [
     }
   }
 
-  /* Hero sequence (desktop): decorative copies built
-     by name-split.ts fly from the name into the handles while the contact
-     block descends, over the shared --hero-end range. Longhands only (a minifier folds a shorthand plus
-     animation-timeline into a declaration browsers reject). */
+  /* Hero sequence (desktop): on the first scroll, decorative copies built by
+     name-split.ts fly from the name into the handles while the contact block
+     descends beside the intro. The sequence is timed, not tied to the scroll
+     position, so it always runs to the end; the real links stay fully
+     visible throughout. */
   :global(.name-split) {
     position: absolute;
     inset: 0;
@@ -225,29 +223,27 @@ const identities = [
   }
 
   :global(.split-piece) {
+    --fly: 720ms;
+    --stagger: calc(var(--order) * 60ms);
     position: absolute;
     line-height: normal;
     letter-spacing: -0.02em;
     white-space: pre;
     transform-origin: 100% 0;
-    animation-name: split-fly;
-    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
-    animation-fill-mode: both;
-    animation-timeline: scroll(root);
-    animation-range: calc(var(--order) * 20px) var(--hero-end);
+    opacity: 0;
   }
 
-  :global(.split-from),
-  :global(.split-to) {
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: scroll(root);
-    animation-range: inherit;
+  .masthead:global(.is-flying) :global(.split-piece) {
+    animation: split-fly var(--fly) cubic-bezier(0.2, 0.7, 0.2, 1)
+      var(--stagger) both;
   }
 
   :global(.split-from) {
     color: var(--ink);
-    animation-name: split-out;
+  }
+
+  .masthead:global(.is-flying) :global(.split-from) {
+    animation: split-out var(--fly) linear var(--stagger) both;
   }
 
   /* "one" stays prominent from the moment it leaves: it is the fragment
@@ -262,17 +258,22 @@ const identities = [
     right: 0;
     color: var(--running);
     letter-spacing: 0;
-    animation-name: split-in;
+    opacity: 0;
+  }
+
+  .masthead:global(.is-flying) :global(.split-to) {
+    animation: split-in var(--fly) linear var(--stagger) both;
   }
 
   /* One continuous diagonal: each copy's position (translate) runs straight
      from its part of the name to its handle's final spot beside the intro,
-     while the contact block descends on the same range to meet it there.
-     Size (scale) is keyed separately and reaches handle size within the
-     first 15%, so the shrinking word clears the headline and location instead
-     of sweeping across them; the path itself never bends. Copies stay
-     invisible until they have cleared the name (10%), so they appear at the
-     end of "Carbone" rather than on top of it. */
+     while the contact block descends to meet it there. Size (scale) is keyed
+     separately and reaches handle size within the first 15%, so the
+     shrinking word clears the lines under the name instead of sweeping
+     across them; the path itself never bends. Copies stay invisible until
+     they have cleared the name (10%), so they appear at the end of "Carbone"
+     rather than on top of it, and fade out over the real handle as they
+     land. */
   @keyframes split-fly {
     0%,
     10% {
@@ -283,7 +284,7 @@ const identities = [
       scale: 1;
     }
     14%,
-    90% {
+    80% {
       opacity: 1;
     }
     15% {
@@ -316,69 +317,34 @@ const identities = [
     }
   }
 
-  /* While the copies fly (only when name-split.ts is active), the landing
-     zone clears: handles, ".one" and the CV line step aside and prefixes dim (to 0.8,
-     which keeps them at WCAG AA), then all return exactly as the copies
-     land. At rest the links are fully shown. */
-  .masthead:global(.is-splitting) :is(.handle, .suffix, .prefix, .cv) {
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: scroll(root);
-    animation-range: 0px var(--hero-end);
-  }
-
-  .masthead:global(.is-splitting) :is(.handle, .suffix, .cv) {
-    animation-name: landing-clear;
-  }
-
-  .masthead:global(.is-splitting) .prefix {
-    animation-name: landing-dim;
-  }
-
-  @keyframes landing-clear {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    6%,
-    92% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes landing-dim {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    10%,
-    85% {
-      opacity: 0.8;
-    }
-  }
-
   /* The contact block descends from the top right to the column beside the
-     intro (--links-dy, measured by the script), easing out with a slight
-     scale dip for depth. Transform only: the links stay readable and
-     clickable throughout, and nothing reflows. */
+     intro (--links-dy, measured by the script) and climbs back, a little
+     faster, when the page returns to the top. A transition, so a change of
+     direction mid-way continues from where the block is. Transform only:
+     the links stay readable and clickable throughout, and nothing reflows. */
   .masthead:global(.is-splitting) nav {
-    transform-origin: 100% 0;
-    animation-name: links-descend;
-    animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
-    animation-fill-mode: both;
-    animation-timeline: scroll(root);
-    animation-range: 0px var(--hero-end);
+    transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  @keyframes links-descend {
-    0% {
+  .masthead:global(.is-landed) nav {
+    transform: translateY(var(--links-dy));
+    transition-duration: 720ms;
+  }
+
+  /* While the script measures, or when the page loads already scrolled. */
+  .masthead:global(.is-instant) nav {
+    transition: none;
+  }
+
+  /* Paper has its own layout: the links stay where the page puts them. */
+  @media print {
+    .masthead:global(.is-landed) nav {
       transform: none;
+      transition: none;
     }
-    50% {
-      transform: translateY(calc(var(--links-dy) * 0.5)) scale(0.97);
-    }
-    100% {
-      transform: translateY(var(--links-dy));
+
+    :global(.name-split) {
+      display: none;
     }
   }
 </style>

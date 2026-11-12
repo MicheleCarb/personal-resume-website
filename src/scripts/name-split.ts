@@ -1,23 +1,41 @@
-// Hero sequence (desktop). Over the first
-// 200px of scroll, one shared scroll timeline drives three things together:
+// Hero sequence (desktop). On the first scroll, three things happen together:
 // decorative copies of the name break at the shared handle ("Michele Carb" |
 // "one"); the contact block descends from the top right to the column beside
 // the intro; and the copies land on the handles at the block's final
-// position, so "michelecarb" fills each row and "one" lands on ".one".
-// The real heading and link text never change (the handles only step aside
-// while the copies fly); the copies are aria-hidden and ignore the pointer.
-// This script only measures; CSS scroll timelines do all the motion. Off on
-// phones, under reduced motion, and where scroll timelines are missing.
+// position, so the name visibly becomes "michelecarb" on each row and "one"
+// lands on ".one". The sequence is timed, not tied to the scroll position:
+// once started it always runs to the end, and it resets when the page is
+// back at the top. The real heading and links never change and stay fully
+// visible; the copies are aria-hidden and ignore the pointer. This script
+// measures and switches state classes; CSS does the motion. Off on phones
+// and under reduced motion.
 
 const header = document.querySelector<HTMLElement>("[data-name-split]");
 const heading = header?.querySelector("h1");
 
-if (header && heading && CSS.supports("animation-timeline: scroll()")) {
+if (header && heading) {
   const query = matchMedia(
     "(min-width: 48rem) and (prefers-reduced-motion: no-preference)",
   );
   const handle = header.dataset.handle ?? "";
   let overlay: HTMLElement | null = null;
+
+  // Scroll positions (px) that start the sequence and reset it; the gap
+  // keeps a hand resting near the top from replaying it.
+  const startAt = 24;
+  const restAt = 4;
+  let landed = false;
+
+  // `instant` settles the state without playing: after a rebuild, or when
+  // the page loads already scrolled.
+  const sync = (instant: boolean) => {
+    if (!header.classList.contains("is-splitting")) return;
+    const next = scrollY > (landed ? restAt : startAt);
+    if (next === landed) return;
+    landed = next;
+    header.classList.toggle("is-landed", landed);
+    header.classList.toggle("is-flying", landed && !instant);
+  };
 
   const rectOf = (node: Text, start: number, end: number) => {
     const range = document.createRange();
@@ -40,7 +58,10 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
   const build = () => {
     overlay?.remove();
     overlay = null;
-    header.classList.remove("is-splitting");
+    // Measure at rest: no transform on the contact block, no transition.
+    header.classList.add("is-instant");
+    header.classList.remove("is-splitting", "is-landed", "is-flying");
+    landed = false;
     const node = heading.firstChild;
     if (!query.matches || !(node instanceof Text)) return;
     const name = node.data.trim();
@@ -130,14 +151,22 @@ if (header && heading && CSS.supports("animation-timeline: scroll()")) {
     );
     header.append(overlay);
     header.classList.add("is-splitting");
+    sync(true);
   };
 
   let frame = 0;
   const rebuild = () => {
     cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(build);
+    frame = requestAnimationFrame(() => {
+      build();
+      // Transitions come back once the settled state has been painted.
+      frame = requestAnimationFrame(() =>
+        header.classList.remove("is-instant"),
+      );
+    });
   };
   document.fonts.ready.then(rebuild);
+  addEventListener("scroll", () => sync(false), { passive: true });
   addEventListener("resize", rebuild);
   query.addEventListener("change", rebuild);
 }
